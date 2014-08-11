@@ -1,0 +1,23 @@
+{
+	"name": "con-board",
+	"version": "0.0.1",
+	"description": "js based info board conventions.",
+	"license": "MIT",
+	"author": "Jakub Barot <LynxyssCZ@gmail.com>",
+	"main": "board/board.js",
+	"repository" : {
+		"type":"git",
+		"url":"https://github.com/node-red/node-red.git"
+	},
+	"contributors": [
+		{"name": "Jakub Barot"},
+		{"name": "Martin Petak"}
+	],
+	"dependencies": {
+		"xml2js": "*",
+		"express": "3.x"
+	},
+	"engines": {
+		"node": ">=0.8"
+	}
+}
