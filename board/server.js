@@ -20,12 +20,21 @@ function Init(collection, config) {
 	settings = config;
 	collection = collection;
 
+	nodeApp.param('location', function(req, res, next, id) {
+		var location = decodeURIComponent(id.replace(/\+/g, ' '));
+		req.loc = location;
+		next();
+	});
+
 	var programmes = {
 		list: function(req, res) {
-			res.send(JSON.stringify(collection.GetAll()));
+			res.send(collection.getAll());
 		},
 		get: function(req, res) {
-			res.send('Get programme ID: ' + req.params.pid);
+			res.send(collection.getAtKey(req.params.pid));
+		},
+		getByLocation: function(req, res) {
+			res.send(collection.getBy('location', req.loc));
 		},
 		delete: function(req, res) {
 			res.send('Delete programme ID: ' + req.params.pid);
@@ -37,6 +46,14 @@ function Init(collection, config) {
 			'/:pid': {
 				get: programmes.get,
 				delete: programmes.delete
+			}
+		},
+		'/location' : {
+			'/:location': {
+				get: programmes.getByLocation,
+				'/:pid': {
+					get: programmes.get
+				}
 			}
 		}
 	};
