@@ -1,7 +1,7 @@
 var xml2js = require('xml2js');
 var xmlParser = xml2js.Parser();
 
-exports.Parse = function(xmlSource, callback) {
+function Parse(xmlSource, callback) {
 	xmlParser.parseString(xmlSource, function(err, res) {
 		if (!err && !!res) {
 			var cleanProgramme = cleanData(res);
@@ -38,3 +38,7 @@ function cleanRecord(record) {
 	delete record['start-time'];
 	delete record['end-time'];
 }
+
+module.exports = {
+	Parse: Parse
+};

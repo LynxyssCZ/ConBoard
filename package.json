@@ -7,7 +7,7 @@
 	"main": "board/board.js",
 	"repository" : {
 		"type":"git",
-		"url":"https://github.com/node-red/node-red.git"
+		"url":"https://github.com/LynxyssCZ/ConBoard.git"
 	},
 	"contributors": [
 		{"name": "Jakub Barot"},
@@ -15,7 +15,8 @@
 	],
 	"dependencies": {
 		"xml2js": "*",
-		"express": "3.x"
+		"express": "3.x",
+		"colors": "*"
 	},
 	"engines": {
 		"node": ">=0.8"
