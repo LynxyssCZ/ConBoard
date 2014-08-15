@@ -21,7 +21,7 @@ function Init(dataCollection, config) {
 	settings = config;
 	collection = dataCollection;
 	registerParams();
-	MapRoutes(nodeApp, getRouteMap());
+	MapRoutes(nodeApp, initRoutes());
 	nodeApp.get('/', function(req, res) {
 		res.send(api);
 	});
@@ -53,7 +53,7 @@ function registerParams() {
 	});
 }
 
-function getRouteMap() {
+function initRoutes() {
 	var programmes = {
 		list: function(req, res) {
 			res.send(collection.getAll());
@@ -71,17 +71,18 @@ function getRouteMap() {
 			res.send(collection.getBy(req.params.param, req.loc));
 		}
 	};
+
 	var routeMap = {
 		'/programmes': {
 			get: programmes.list,
 			'/:pid': {
 				get: programmes.getById,
 				post: programmes.update,
-				delete: programmes.delete,
-				'/:key' : {
-					'/:value': {
-						get: programmes.getByParam
-					}
+				delete: programmes.delete
+			},
+			'/:key' : {
+				'/:value': {
+					get: programmes.getByParam
 				}
 			}
 		}
