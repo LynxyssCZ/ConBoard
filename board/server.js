@@ -45,9 +45,9 @@ function registerParams() {
 	});
 	nodeApp.param('pid', function(req, res, next, pId) {
 		var id;
-		if (IsNumeric(pId)) {
+//		if (IsNumeric(pId)) {
 			id = pId
-		}
+//		}
 		req.pid = id;
 		next();
 	});
