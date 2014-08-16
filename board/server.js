@@ -21,12 +21,11 @@ function Init(dataCollection, config) {
 	settings = config;
 	collection = dataCollection;
 	registerParams();
+	nodeApp.use('/', express.static(__dirname + '/www'));
 	MapRoutes(nodeApp, initRoutes());
 	nodeApp.get('/api', function(req, res) {
 		res.send(api);
 	});
-	nodeApp.use('/', express.static(__dirname + '../www'));
-	
 }
 
 module.exports = {
