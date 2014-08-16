@@ -27,7 +27,8 @@ function cmp(a, b) {
 function Push(record) {
 	indexStore[record[itemIndex]] = record;
 	for(key in record) {
-		keyMap[key][record[itemIndex]] = record;
+
+//		keyMap[key][record[itemIndex]] = ;
 	}
 }
 
