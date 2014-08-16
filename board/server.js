@@ -45,9 +45,9 @@ function registerParams() {
 	});
 	nodeApp.param('pid', function(req, res, next, pId) {
 		var id;
-//		if (IsNumeric(pId)) {
+		if (pId >= 0) {
 			id = pId
-//		}
+		}
 		req.pid = id;
 		next();
 	});
@@ -68,7 +68,7 @@ function initRoutes() {
 			res.send('Delete programme ID: ' + req.pid);
 		},
 		getByParam: function(req, res) {
-			res.send(collection.getBy(req.params.param, req.loc));
+			res.send(collection.getBy(req.params.key, req.loc));
 		}
 	};
 
