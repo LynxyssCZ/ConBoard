@@ -20,10 +20,10 @@ server.start();
 function storeData(err, data) {
 	if (!err, !!data) {
 		printer.PrintOk('End of data setup');
-		collection.Init({index: settings.index, segmentation: settings.segmentation}, data);
+		collection.Init({recordIndex: settings.recordIndex}, data);
 	}
 	else {
-		printer.PrintError('Error while loading data');
+		printer.PrintError('Error while loading source data');
 		process.exit();
 	}
 }

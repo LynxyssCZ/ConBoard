@@ -1,15 +1,23 @@
 var store = [];
-var catMap = {};
+var indexStore = {};
 var itemIndex;
-var itemCategory;
+
+var catMap = {};
+var keyMap = {};
+var mapFields;
 
 function Init(settings, data) {
-	itemIndex = settings.index;
-	itemCategory = settings.segmentation;
+	itemIndex = settings.recordIndex;
+
+	if (data.length > 0) {
+		for(key in data[0]) {
+			keyMap[key] = {};
+		}
+	}
+
 	for (var i = data.length - 1; i >= 0; i--) {
 		Push(data[i]);
-	};
-	store.sort(cmp);
+	}
 }
 
 function cmp(a, b) {
@@ -17,33 +25,33 @@ function cmp(a, b) {
 }
 
 function Push(record) {
-	store.push(record);
-
+	indexStore[record[itemIndex]] = record;
+	for(key in record) {
+		keyMap[key][record[itemIndex]] = record;
+	}
 }
 
 function getBy(key, value) {
-	var itemSet = [];
-	for (var i = 0; i < store.length; i++) {
-		if (store[i][key] === value) {
-			itemSet.push(store[i]);
+	var itemSet = {};
+	for (index in indexStore) {
+		if (indexStore[index][key] === value) {
+			itemSet[index] = indexStore[index];
 		}
-	};
+	}
 	return itemSet;
 }
 
 function getAtKey(key) {
-	for (var i = store.length - 1; i >= 0; i--) {
-		if (store[i].pid === key) {
-			return store[i];
-		}
-		if (store[i].pid < key) {
-			return {};
-		}
-	};
+	if (indexStore[key]) {
+		return indexStore[key];
+	}
+	else {
+		return {};
+	}
 }
 
 function getAll() {
-	return store;
+	return indexStore;
 }
 
 function getCategoryList() {
