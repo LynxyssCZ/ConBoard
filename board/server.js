@@ -22,7 +22,7 @@ function Init(dataCollection, config) {
 	collection = dataCollection;
 	registerParams();
 	MapRoutes(nodeApp, initRoutes());
-	nodeApp.get('/api/', function(req, res) {
+	nodeApp.get('/api', function(req, res) {
 		res.send(api);
 	});
 	nodeApp.use('/', express.static(__dirname + '../www'));
