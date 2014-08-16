@@ -22,6 +22,7 @@ function Init(dataCollection, config) {
 	collection = dataCollection;
 	registerParams();
 	nodeApp.use(express.static(__dirname + '/../www'));
+	printer.PrintOk(__dirname);
 	MapRoutes(nodeApp, initRoutes());
 	nodeApp.get('/api', function(req, res) {
 		res.send(api);
