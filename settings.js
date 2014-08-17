@@ -1,13 +1,13 @@
-exports.port= 8085;
-exports.wwwPath= './www';
+exports.port = 8085;
+exports.wwwPath = './www';
 // Data path settings
-exports.sourcePath= './data/source.xml';
-exports.dataPath= './data/data.json';
-// Fields by which records get categorised
-exports.recordCategories = ['location'];
+exports.dataPath = './data';
+exports.sourceName = 'source.xml';
 // Fields that make up short records
-exports.recordFields= ['pid', 'startTime', 'endTime'];
+exports.recordFields = ['pid', 'startTime', 'endTime'];
 // Main record index
-exports.recordIndex= 'pid';
+exports.recordIndex = 'pid';
+// Record categorisator
+exports.recordCatField = 'location';
 // Minimal local time. If local time is lower, the application wont launch server and print an error in the console
-exports.minTime= 1262304000000;
+exports.minTime = 1262304000000;

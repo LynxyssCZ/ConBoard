@@ -1,6 +1,7 @@
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
+var path = require('path');
 
 var settings = require('./settings');
 var server = require('./board/server');
@@ -11,16 +12,26 @@ var collection = require('./board/collection');
 
 printer.PrintOk('Starting ConBoard', 'nom');
 printer.PrintOk('Setting up data');
-setupData(settings.sourcePath, storeData);
+setupData(settings.dataPath + '/' + settings.sourceName, storeData);
 
 // Server start
-server.createServer(collection, settings);
+server.createServer(collection, {
+	port: settings.port,
+	staticPath: path.resolve(settings.wwwPath)
+});
 server.start();
 
 function storeData(err, data) {
 	if (!err, !!data) {
 		printer.PrintOk('End of data setup');
-		collection.Init({recordIndex: settings.recordIndex}, data);
+		collection.Init(
+			{
+				recordIndex: settings.recordIndex,
+				recordFields: settings.recordFields,
+				recordCatField: settings.recordCatField,
+			},
+			data
+		);
 	}
 	else {
 		printer.PrintError('Error while loading source data');

@@ -21,7 +21,7 @@ function Init(dataCollection, config) {
 	settings = config;
 	collection = dataCollection;
 	registerParams();
-	nodeApp.use(express.static(__dirname + '/../www'));
+	nodeApp.use(express.static(settings.staticPath));
 	printer.PrintOk(__dirname);
 	MapRoutes(nodeApp, initRoutes());
 	nodeApp.get('/api', function(req, res) {
@@ -71,6 +71,9 @@ function initRoutes() {
 		},
 		getByParam: function(req, res) {
 			res.send(collection.getBy(req.params.key, req.loc));
+		},
+		getCats: function(req, res) {
+			res.send(collection.getCategoryList());
 		}
 	};
 
@@ -82,11 +85,12 @@ function initRoutes() {
 				post: programmes.update,
 				delete: programmes.delete
 			},
-			'/:key' : {
-				'/:value': {
-					get: programmes.getByParam
-				}
+			'/:key/:value': {
+				get: programmes.getByParam
 			}
+		},
+		'/categories': {
+			get: programmes.getCats
 		}
 	};
 	return routeMap;

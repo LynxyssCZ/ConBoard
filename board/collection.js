@@ -1,19 +1,15 @@
-var store = [];
 var indexStore = {};
 var itemIndex;
 
-var catMap = {};
-var keyMap = {};
-var mapFields;
+var cats = [];
+var catField;
+
+var recordFields;
 
 function Init(settings, data) {
 	itemIndex = settings.recordIndex;
-
-	if (data.length > 0) {
-		for(key in data[0]) {
-			keyMap[key] = {};
-		}
-	}
+	recordFields = settings.recordFields;
+	catField = settings.recordCatField;
 
 	for (var i = data.length - 1; i >= 0; i--) {
 		Push(data[i]);
@@ -26,17 +22,21 @@ function cmp(a, b) {
 
 function Push(record) {
 	indexStore[record[itemIndex]] = record;
-	for(key in record) {
 
-//		keyMap[key][record[itemIndex]] = ;
+	if (cats.indexOf(record[catField]) === -1) {
+		cats.push(record[catField]);
 	}
 }
 
 function getBy(key, value) {
-	var itemSet = {};
-	for (index in indexStore) {
+	var itemSet = [];
+	for (var index in indexStore) {
 		if (indexStore[index][key] === value) {
-			itemSet[index] = indexStore[index];
+			var item = {};
+			for (var field in recordFields) {
+				item[recordFields[field]] = indexStore[index][recordFields[field]];
+			}
+			itemSet.push(item);
 		}
 	}
 	return itemSet;
@@ -56,7 +56,7 @@ function getAll() {
 }
 
 function getCategoryList() {
-
+	return cats;
 }
 
 function findIndex(record, array) {
@@ -69,5 +69,5 @@ module.exports = {
 	getAll: getAll,
 	getAtKey: getAtKey,
 	getBy: getBy,
-	getList: getCategoryList
+	getCategoryList: getCategoryList
 };
