@@ -48,8 +48,6 @@ ConBoard.Cat.prototype.createEl = function() {
 	var catEl = document.createElement('div');
 	catEl.setAttribute('class', 'con-board-cat');
 	catEl.setAttribute('id', 'con-board-cat-'+this.config.id);
-	catEl.style.height = this.config.height;
-	catEl.style.width = this.config.width;
 	this.el = catEl;
 
 	var catHead = document.createElement('div');

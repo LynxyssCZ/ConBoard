@@ -36,8 +36,8 @@ ConBoard.Head.prototype.createPiece = function(interval) {
 
 };
 
-ConBoard.Head.prototype.DayEnum = ['Nedele', 'Pondeli', 'Utery', 'Streda', 'Ctvrtek', 'Patek', 'Sobota'];
+ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
 
 ConBoard.Head.prototype.update = function(time) {
-	this.timeEl.innerHTML = this.DayEnum[time.day] + ' ' + time.hours + ':' + time.minutes;
+	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + time.hours + ':' + time.minutes;
 };

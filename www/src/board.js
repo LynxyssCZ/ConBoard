@@ -67,8 +67,6 @@ ConBoard.Board.prototype.loadCats = function(cats) {
 	for (var cat in cats) {
 		var cmp = new ConBoard.Cat({
 			name: cats[cat],
-			height: catSize + '%',
-			width: this.body.clientwidth,
 			id: cat,
 			key: 'location'
 		});
