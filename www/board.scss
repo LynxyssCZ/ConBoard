@@ -4,11 +4,6 @@ body, html {
 }
 .con-board-wrap {
 	overflow: hidden;
-
-	.con-board-head {
-		width: 100%;
-		height: 10%;
-	}
 	.con-board-body {
 		display: -webkit-inline-flex;
 		-webkit-flex-direction: column;
@@ -34,8 +29,35 @@ body, html {
 		overflow: hidden;
 		background-color: blue;
 		-webkit-flex-grow: 1;
-		height: 100%;
-		width: 100%;
+
+		
 		vertical-align: top;
+	}
+}
+
+.con-board-head {
+	width: 100%;
+	height: 10%;
+	position: relative;
+
+	.con-board-head-logo {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	.con-board-head-time {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		padding: 5px;
+	}
+
+	.con-board-head-line {
+		width: 100%;
+		line-height: 26px;
+		position: absolute;
+		bottom: 0;
+		padding-left: 20%;
 	}
 }
