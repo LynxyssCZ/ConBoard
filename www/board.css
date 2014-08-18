@@ -1,0 +1,32 @@
+body, html {
+  padding: 0px;
+  margin: 0px; }
+
+.con-board-wrap {
+  overflow: hidden; }
+  .con-board-wrap .con-board-head {
+    width: 100%;
+    height: 10%; }
+  .con-board-wrap .con-board-body {
+    display: -webkit-inline-flex;
+    -webkit-flex-direction: column;
+    width: 100%;
+    height: 90%; }
+
+.con-board-cat {
+  display: inline-flex;
+  display: -webkit-inline-flex;
+  -webkit-flex-wrap: nowrap;
+  background-color: silver;
+  vertical-align: top; }
+  .con-board-cat .con-board-cat-head {
+    width: 20%;
+    background-color: yellow;
+    vertical-align: top; }
+  .con-board-cat .con-board-cat-body {
+    overflow: hidden;
+    background-color: blue;
+    -webkit-flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    vertical-align: top; }

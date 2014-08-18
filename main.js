@@ -12,12 +12,19 @@ var collection = require('./board/collection');
 
 printer.PrintOk('Starting ConBoard', 'nom');
 printer.PrintOk('Setting up data');
+
+if (Date.now() < settings.minTime) {
+	printer.PrintError('Server time too low!');
+	gracefulExit();
+}
+
 setupData(settings.dataPath + '/' + settings.sourceName, storeData);
 
 // Server start
 server.createServer(collection, {
 	port: settings.port,
-	staticPath: path.resolve(settings.wwwPath)
+	staticPath: path.resolve(settings.wwwPath),
+	dataPath: path.resolve(settings.dataPath)
 });
 server.start();
 
@@ -29,13 +36,14 @@ function storeData(err, data) {
 				recordIndex: settings.recordIndex,
 				recordFields: settings.recordFields,
 				recordCatField: settings.recordCatField,
+				ignoredCats: settings.ignoredCats
 			},
 			data
 		);
 	}
 	else {
 		printer.PrintError('Error while loading source data');
-		process.exit();
+		gracefulExit();
 	}
 }
 

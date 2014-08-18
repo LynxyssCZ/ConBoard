@@ -1,1 +1,30 @@
-It WORKS!
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ConBoard</title>
+		<meta name="descrition" content="Convention programme board">
+		<script type="text/javascript" src="/board.js"></script>
+		<script type="text/javascript" src="/data/board.js"></script>
+		<link rel="stylesheet" type="text/css" href="/board.css">
+		<link rel="stylesheet" type="text/css" href="/data/board.css">
+	</head>
+	<body>
+		<div id="ConBoard" class="con-board-wrap"></div>
+		<script type="text/javascript">
+			var boardDiv = document.getElementById('ConBoard');
+			var board = new ConBoard.Board(boardDiv);
+			var windowHeight = window.innerHeight;
+			var windowWidth = window.innerWidth;
+			function setWindowHeight(){
+				var windowHeight = window.innerHeight;
+				var windowWidth = window.innerWidth;
+				document.body.style.height = windowHeight + "px";
+				document.body.style.width = windowWidth + "px";
+				boardDiv.style.height = windowHeight + "px";
+				boardDiv.style.width = windowWidth + "px";
+			}
+			window.addEventListener("resize",setWindowHeight,false);
+			setWindowHeight();
+		</script>
+	</body>
+</html>

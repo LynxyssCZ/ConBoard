@@ -22,7 +22,9 @@ function Init(dataCollection, config) {
 	collection = dataCollection;
 	registerParams();
 	nodeApp.use(express.static(settings.staticPath));
-	printer.PrintOk(__dirname);
+	nodeApp.use('/data', express.static(settings.dataPath + '/www'));
+	nodeApp.use('/img', express.static(settings.dataPath + '/img'));
+
 	MapRoutes(nodeApp, initRoutes());
 	nodeApp.get('/api', function(req, res) {
 		res.send(api);
@@ -105,7 +107,7 @@ function MapRoutes(app, a, route) {
 				MapRoutes(app, a[key], route + key);
 				break;
 			case 'function':
-				api.push(route);
+				api.push(key + ' ' + route);
 				app[key](route, a[key]);
 				break;
 		}

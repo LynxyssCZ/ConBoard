@@ -10,6 +10,7 @@ function Init(settings, data) {
 	itemIndex = settings.recordIndex;
 	recordFields = settings.recordFields;
 	catField = settings.recordCatField;
+	ignoredCats = settings.ignoredCats;
 
 	for (var i = data.length - 1; i >= 0; i--) {
 		Push(data[i]);
@@ -23,7 +24,7 @@ function cmp(a, b) {
 function Push(record) {
 	indexStore[record[itemIndex]] = record;
 
-	if (cats.indexOf(record[catField]) === -1) {
+	if (cats.indexOf(record[catField]) === -1 && ignoredCats.indexOf(record[catField]) === -1) {
 		cats.push(record[catField]);
 	}
 }
