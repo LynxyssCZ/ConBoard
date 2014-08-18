@@ -6,7 +6,7 @@ body, html {
 	overflow: hidden;
 	display: -webkit-inline-flex;
 	-webkit-flex-direction: column;
-	
+
 	.con-board-body {
 		display: -webkit-inline-flex;
 		-webkit-flex-direction: column;
@@ -17,6 +17,8 @@ body, html {
 
 .con-board-cat {
 	height: 100%;
+	margin-top: -1px;
+	border: 1px solid grey;
 	display: inline-flex;
 	display: -webkit-inline-flex;
 	-webkit-flex-wrap: nowrap;
@@ -27,14 +29,16 @@ body, html {
 		width: 15%;
 		background-color: yellow;
 		margin: auto;
+		text-align: center;
 		vertical-align: top;
+		font-weight: 40px;
+		font-size: 40px;
 	}
 	.con-board-cat-body {
 		overflow: hidden;
 		background-color: blue;
 		-webkit-flex-grow: 1;
 
-		
 		vertical-align: top;
 	}
 }
