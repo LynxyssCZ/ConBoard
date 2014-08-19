@@ -1,5 +1,9 @@
 window.ConBoard = window.ConBoard || {};
-ConBoard.Board = function(boardDiv) {
+ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
+
+ConBoard.Board = function(boardDiv, config) {
+	this.resolution = config.resolution;
+
 	this.cats = [];
 	this.container = boardDiv;
 	this.container.style.width = document.body.clientWidth;
@@ -10,8 +14,6 @@ ConBoard.Board = function(boardDiv) {
 	this.startTimer();
 };
 
-ConBoard.Board.prototype.DayEnum = ['Nedele', 'Pondeli', 'Utery', 'Streda', 'Ctvrtek', 'Patek', 'Sobota'];
-
 ConBoard.Board.prototype.createHead = function() {
 	this.head = new ConBoard.Head({
 
@@ -20,9 +22,11 @@ ConBoard.Board.prototype.createHead = function() {
 };
 
 ConBoard.Board.prototype.createBody = function() {
-	this.body = document.createElement('div');
-	this.body.setAttribute('class', 'con-board-body');
-	this.container.appendChild(this.body);
+	this.body = new ConBoard.Body({
+		catKey: this.catKey
+	});
+
+	this.container.appendChild(this.body.getEl());
 };
 
 ConBoard.Board.prototype.updateHead = function(time) {
@@ -55,22 +59,18 @@ ConBoard.Board.prototype.startTimer = function() {
 
 ConBoard.Board.prototype.getCats = function() {
 	var me = this;
-	var request = new ConBoard.Request('GET', '/categories', function(response) {
-		var res = JSON.parse(response);
-		me.loadCats(res);
+	var request = ConBoard.Api.GetCats(function(error, response) {
+		me.loadCats(response);
 	});
-	request.send();
 };
 
 ConBoard.Board.prototype.loadCats = function(cats) {
-	var catSize = Math.floor(100 / cats.length);
 	for (var cat in cats) {
-		var cmp = new ConBoard.Cat({
+		this.body.createCat({
 			name: cats[cat],
 			id: cat,
+			resolution: this.resolution,
 			key: 'location'
 		});
-		this.cats.push(cmp);
-		this.body.appendChild(cmp.getEl());
 	};
 };

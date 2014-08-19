@@ -17,7 +17,8 @@ ConBoard.Request.prototype.send = function() {
 };
 
 ConBoard.Request.prototype.onStateChange = function(xhr, callback) {
+	var error;
 	if (xhr.readyState === 4) {
-		callback(xhr.response);
+		callback(error, xhr.response);
 	}
 };

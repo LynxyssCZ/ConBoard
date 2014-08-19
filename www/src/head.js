@@ -4,7 +4,10 @@ ConBoard.Head = function(config) {
 	this.interval = config.interval;
 	this.pieces = [];
 	this.createEl();
-	this.lineEl.innerHTML = 'Timeline start';
+	this.lineEl.innerHTML;
+	for (var i = 0; i < this.resolution; i++) {
+		this.createPiece(i);
+	};
 };
 
 ConBoard.Head.prototype.getEl = function() {
@@ -23,8 +26,8 @@ ConBoard.Head.prototype.createEl = function() {
 	logoEl.setAttribute('class', 'con-board-head-logo');
 
 	headEl.appendChild(logoEl);
-	headEl.appendChild(timeEl);
 	headEl.appendChild(lineEl);
+	headEl.appendChild(timeEl);
 
 	this.logo = logoEl;
 	this.lineEl = lineEl;
@@ -33,10 +36,8 @@ ConBoard.Head.prototype.createEl = function() {
 };
 
 ConBoard.Head.prototype.createPiece = function(interval) {
-
+	var pieceEl = document.createEl('div');
 };
-
-ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
 
 ConBoard.Head.prototype.update = function(time) {
 	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + time.hours + ':' + time.minutes;
