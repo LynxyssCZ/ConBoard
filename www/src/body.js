@@ -7,6 +7,12 @@ ConBoard.Body = function(config) {
 	this.createEl();
 };
 
+ConBoard.Body.prototype.update = function(time) {
+	for (var i = this.cats.length - 1; i >= 0; i--) {
+		this.cats[i].update(time);
+	};
+};
+
 ConBoard.Body.prototype.getEl = function() {
 	return this.el;
 };
@@ -28,7 +34,8 @@ ConBoard.Body.prototype.createCat = function(data) {
 	var cmp = new ConBoard.Cat({
 		name: data.name,
 		id: this.cats.length,
-		resolution: data.resolution
+		resolution: data.resolution,
+		interval: data.interval
 	});
 	this.cats.push(cmp);
 	this.el.appendChild(cmp.getEl());

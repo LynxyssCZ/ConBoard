@@ -14,18 +14,25 @@ ConBoard.Programme = function(data) {
 
 	this.createEl();
 };
-// Helper method, later, data will be loaded from outside
-ConBoard.Programme.prototype.load = function(id) {
 
+ConBoard.Programme.prototype.setWidth = function(width) {
+	this.el.style.width = width;
+};
+
+ConBoard.Programme.prototype.updatePosition = function(position) {
+	this.el.style.left = position;
 };
 
 ConBoard.Programme.prototype.destroy = function() {
-	this.el.parentnode.removeChild(this.el);
-}
+	this.el.parentNode.removeChild(this.el);
+};
 
 ConBoard.Programme.prototype.createEl = function() {
-	var pEl = document.createEl('div');
-}
+	var pEl = document.createElement('div');
+	pEl.setAttribute('class', 'con-board-programme');
+	pEl.setAttribute('id', 'programme-' + this.pid);
+	this.el = pEl;
+};
 
 ConBoard.Programme.prototype.getEl = function() {
 	return this.el;

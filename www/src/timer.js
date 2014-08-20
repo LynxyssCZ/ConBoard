@@ -1,15 +1,16 @@
 window.ConBoard = window.ConBoard || {};
-ConBoard.Timer = function() {
-	this.interval = 500;
+ConBoard.Timer = function(interval) {
+	this.interval = interval || 500;
 	this.listeners = [];
 };
 
 ConBoard.Timer.prototype.Start = function() {
 	this.interval = window.setInterval(this.Tick.bind(this), this.interval);
+	this.Tick();
 };
 
 ConBoard.Timer.prototype.Tick = function() {
-	var tick = Date.now();
+	var tick = Date.now() + 257908000;
 	var tock = new Date(tick);
 	var stamp = {
 		tick: tick,

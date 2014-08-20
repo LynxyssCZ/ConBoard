@@ -6,7 +6,9 @@ ConBoard.Head = function(config) {
 	this.createEl();
 	this.lineEl.innerHTML;
 	for (var i = 0; i < this.resolution; i++) {
-		this.createPiece(i);
+		var piece = this.createPiece(i);
+		this.pieces.push(piece);
+		this.lineEl.appendChild(piece);
 	};
 };
 
@@ -36,9 +38,39 @@ ConBoard.Head.prototype.createEl = function() {
 };
 
 ConBoard.Head.prototype.createPiece = function(interval) {
-	var pieceEl = document.createEl('div');
+	var pieceEl = document.createElement('div');
+	pieceEl.setAttribute('class', 'con-board-head-line-piece');
+
+	return pieceEl;
+};
+
+ConBoard.Head.prototype.updatePiece = function(i, hh, mm) {
+	this.pieces[i].innerHTML = hh + ':' + mm;
 };
 
 ConBoard.Head.prototype.update = function(time) {
-	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + time.hours + ':' + time.minutes;
+	var hour = time.hours,
+		startMin = (time.minutes >= 30)? '30': '00',
+		pieceCount = this.pieces.length,
+		minutes;
+
+	if (time.minutes < 10) {
+		minutes = '0' + time.minutes.toString();
+	}
+	else {
+		minutes = time.minutes;
+	}
+
+	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
+
+	for (var i = 0; i < pieceCount; ++i) {
+		this.updatePiece(i, hour, startMin);
+		if (startMin == '30') {
+			hour = (hour < 23)? (hour+1) : 0;
+			startMin = '00';
+		}
+		else {
+			startMin = 30;
+		}
+	};
 };

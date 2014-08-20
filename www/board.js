@@ -2,15 +2,21 @@ window.ConBoard = window.ConBoard || {};
 ConBoard.Cat = function(data) {
 	this.name = data.name;
 	this.id = data.id;
-	this.resolution = data.resolution
+	this.resolution = data.resolution;
+	this.interval = data.interval;
 
+	this.progIndex = 0;
+	this.tillStart;
 	this.content = [];
 	this.progs = [];
 	this.markers = [];
 	this.createEl();
 };
 
-// Helper method, later the data will be all suplied by board
+ConBoard.Cat.prototype.getProgCount = function() {
+	return this.progs.length;
+};
+
 ConBoard.Cat.prototype.fillCat = function(data) {
 	this.content = data;
 	this.content.sort(function(a, b) {
@@ -19,8 +25,74 @@ ConBoard.Cat.prototype.fillCat = function(data) {
 };
 
 ConBoard.Cat.prototype.update = function(time) {
+	// move pogIndex if there are some 'top' programmes out of the window
+	for (var i = this.progIndex; i < this.content.length; i++) {
+		if (this.content[i].endTime < time.tick) {
+			this.progIndex = i+1;
+		}
+	}
+	// Check if we are no on the end of the programme already
+	if (this.progIndex >= this.content.length) {
+		return;
+	}
 
+	this.updateBody(time);
+	// Check if 'top' programme is not too far away
+	if (this.progs.length === 0 && this.content.length && this.content[this.progIndex].startTime > time.endTick) {
+		this.tillStart = ConBoard.TickDiff(time.tick, this.content[this.progIndex].startTime);
+	}
 },
+
+ConBoard.Cat.prototype.updateBody = function(time) {
+	// Delete old programmes
+	for (var i = 0; i < this.progs.length; i++) {
+		if (this.progs[i].endTime < time.tick) {
+			console.log('Deleting', this.progs[i]);
+			this.progs[i].destroy();
+			this.progs.splice(i, 1);
+			i--;
+		}
+		else {
+
+		}
+	};
+	// Render new programmes that fit
+	for (var i = this.progIndex; i < this.content.length; i++) {
+		if (this.content[i].endTime > time.tick
+			&& this.content[i].startTime < time.endTick
+			&& !this.content[i].rendered
+		) {
+			this.createProgramme(this.content[i], time);
+			this.content[i].rendered = true;
+		}
+		// If I reach programme totally out of the window, break
+		if (time.endTick < this.content[i].startTime) {
+			break;
+		}
+	}
+};
+
+ConBoard.Cat.prototype.createProgramme = function(data, time) {
+	console.log('Rendering');
+	console.log(data);
+	var prog = new ConBoard.Programme(data);
+	this.progs.push(prog);
+	this.body.appendChild(prog.getEl());
+	var length = ((data.endTime - data.startTime)/this.interval)*(100/this.resolution);
+	var position = (time.tick-data.startTime)/(this.interval);
+	if (data.startTime > time.tick && data.endTime > data.endTick) {
+		// Full board events
+		position = 0;
+		length = 100;
+	}
+	else if (data.startTime > time.tick) {
+		position = 0;
+	}
+	else if (data.endTime > time.endTick) {
+		// Handle right side overwflow
+	}
+
+};
 
 ConBoard.Cat.prototype.getEl = function() {
 	return this.el;
@@ -58,6 +130,305 @@ ConBoard.Cat.prototype.createMarker = function() {
 	markEl.setAttribute('class', 'con-board-cat-body-marker');
 	return markEl;
 };window.ConBoard = window.ConBoard || {};
+ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
+ConBoard.DeltaToString = function(delta) {
+	var ms = delta % 1000;
+	delta = (delta - ms) / 1000;
+	var sec = delta % 60;
+	delta = (delta - sec) / 60;
+	var min = delta % 60;
+	var hrs = (delta - min) /60;
+	return hrs + ':' + min + ':' + ((sec < 10)? ('0'+sec) : sec);
+};
+
+ConBoard.TickDiff = function(ts1, ts2) {
+	return (ts1 > ts2)? ts1 - ts2 : ts2 - ts1;
+};
+
+ConBoard.Board = function(boardDiv, config) {
+	this.resolution = config.resolution;
+	this.interval = config.interval;
+
+	this.minutes;
+
+	this.cats = [];
+	this.container = boardDiv;
+	this.container.style.width = document.body.clientWidth;
+
+	this.createHead();
+	this.createBody();
+	this.getCats();
+	this.startTimer();
+};
+
+ConBoard.Board.prototype.createHead = function() {
+	this.head = new ConBoard.Head({
+		resolution: this.resolution
+	});
+	this.container.appendChild(this.head.getEl());
+};
+
+ConBoard.Board.prototype.createBody = function() {
+	this.body = new ConBoard.Body({
+		catKey: this.catKey
+	});
+
+	this.container.appendChild(this.body.getEl());
+};
+
+ConBoard.Board.prototype.updateHead = function(time) {
+	this.head.update(time);
+}
+
+ConBoard.Board.prototype.tick = function(event) {
+	console.log('tick');
+	if (this.minutes === event.minutes) {
+		console.log('nop');
+		//return;
+	}
+	this.minutes = event.minutes;
+	var startMinutes = (event.minutes > 30) ? 30 : 00;
+	event.startMinutes = startMinutes;
+	event.endTick = event.tick + (this.resolution * this.interval);
+	this.head.update(event);
+	this.body.update(event);
+};
+
+ConBoard.Board.prototype.startTimer = function() {
+	this.timer = new ConBoard.Timer(15000);
+	this.timer.on(
+		this.tick,
+		this
+	);
+	this.timer.Start();
+};
+
+ConBoard.Board.prototype.getCats = function() {
+	var me = this;
+	var request = ConBoard.Api.GetCats(function(error, response) {
+		me.loadCats(response);
+	});
+};
+
+ConBoard.Board.prototype.loadCats = function(cats) {
+	for (var cat in cats) {
+		this.body.createCat({
+			name: cats[cat],
+			id: cat,
+			resolution: this.resolution,
+			interval: this.interval,
+			key: 'location'
+		});
+	};
+};
+window.ConBoard = window.ConBoard || {};
+ConBoard.Body = function(config) {
+	this.config = config;
+
+	this.cats = [];
+
+	this.createEl();
+};
+
+ConBoard.Body.prototype.update = function(time) {
+	for (var i = this.cats.length - 1; i >= 0; i--) {
+		this.cats[i].update(time);
+	};
+};
+
+ConBoard.Body.prototype.getEl = function() {
+	return this.el;
+};
+
+ConBoard.Body.prototype.createEl = function() {
+	this.el = document.createElement('div');
+	this.el.setAttribute('class', 'con-board-body');
+};
+
+ConBoard.Body.prototype.getCat = function(index) {
+	return this.cats[i] || {};
+};
+
+ConBoard.Body.prototype.getCatCount = function() {
+	return this.cats.length;
+};
+
+ConBoard.Body.prototype.createCat = function(data) {
+	var cmp = new ConBoard.Cat({
+		name: data.name,
+		id: this.cats.length,
+		resolution: data.resolution,
+		interval: data.interval
+	});
+	this.cats.push(cmp);
+	this.el.appendChild(cmp.getEl());
+	this.loadCat(cmp);
+};
+
+ConBoard.Body.prototype.loadCat = function(cat) {
+	ConBoard.Api.GetList(cat.name, function(err, res) {
+		cat.fillCat(res);
+	});
+};window.ConBoard = window.ConBoard || {};
+ConBoard.Programme = function(data) {
+	this.pid = data.pid;
+	this.title = data.title;
+	this.startTime = data.startTime;
+	this.endTime = data.endTime;
+	this.author = data.author;
+	this.location = data.location;
+	this.programLine = data.programLine;
+	this.type = data.type;
+	this.annotation = data.annotation;
+
+	this.el = undefined;
+
+	this.createEl();
+};
+
+ConBoard.Programme.prototype.setWidth = function(width) {
+	this.el.style.width = width;
+};
+
+ConBoard.Programme.prototype.updatePosition = function(position) {
+	this.el.style.left = position;
+};
+
+ConBoard.Programme.prototype.destroy = function() {
+	this.el.parentNode.removeChild(this.el);
+};
+
+ConBoard.Programme.prototype.createEl = function() {
+	var pEl = document.createElement('div');
+	pEl.setAttribute('class', 'con-board-programme');
+	pEl.setAttribute('id', 'programme-' + this.pid);
+	this.el = pEl;
+};
+
+ConBoard.Programme.prototype.getEl = function() {
+	return this.el;
+};
+window.ConBoard = window.ConBoard || {};
+ConBoard.Timer = function(interval) {
+	this.interval = interval || 500;
+	this.listeners = [];
+};
+
+ConBoard.Timer.prototype.Start = function() {
+	this.interval = window.setInterval(this.Tick.bind(this), this.interval);
+	this.Tick();
+};
+
+ConBoard.Timer.prototype.Tick = function() {
+	var tick = Date.now() + 257908000;
+	var tock = new Date(tick);
+	var stamp = {
+		tick: tick,
+		day: tock.getDay(),
+		hours: tock.getHours(),
+		minutes: tock.getMinutes()
+	};
+
+	for(var i in this.listeners) {
+		var fn = this.listeners[i].fn,
+			sc = this.listeners[i].scope || window;
+		fn.call(sc, stamp);
+	}
+};
+
+ConBoard.Timer.prototype.on = function(fn, scope) {
+	this.listeners.push({fn: fn, scope: scope});
+};
+
+ConBoard.Timer.prototype.off = function(fn, scope) {
+	for (var i in this.listeners) {
+		var listener = listeners[i];
+		if (listener.fn === fn && scope === listener.scope) {
+			listeners.splice(i, 1);
+			return;
+		}
+	}
+};
+
+ConBoard.Timer.prototype.Stop = function() {
+	window.clearInterval(this.interval);
+};window.ConBoard = window.ConBoard || {};
+ConBoard.Head = function(config) {
+	this.resolution = config.resolution;
+	this.interval = config.interval;
+	this.pieces = [];
+	this.createEl();
+	this.lineEl.innerHTML;
+	for (var i = 0; i < this.resolution; i++) {
+		var piece = this.createPiece(i);
+		this.pieces.push(piece);
+		this.lineEl.appendChild(piece);
+	};
+};
+
+ConBoard.Head.prototype.getEl = function() {
+	return this.el;
+};
+
+ConBoard.Head.prototype.createEl = function() {
+	var headEl = document.createElement('div'),
+		timeEl = document.createElement('div'),
+		lineEl = document.createElement('div'),
+		logoEl = document.createElement('div');
+
+	headEl.setAttribute('class', 'con-board-head');
+	lineEl.setAttribute('class', 'con-board-head-line');
+	timeEl.setAttribute('class', 'con-board-head-time');
+	logoEl.setAttribute('class', 'con-board-head-logo');
+
+	headEl.appendChild(logoEl);
+	headEl.appendChild(lineEl);
+	headEl.appendChild(timeEl);
+
+	this.logo = logoEl;
+	this.lineEl = lineEl;
+	this.timeEl = timeEl;
+	this.el = headEl;
+};
+
+ConBoard.Head.prototype.createPiece = function(interval) {
+	var pieceEl = document.createElement('div');
+	pieceEl.setAttribute('class', 'con-board-head-line-piece');
+
+	return pieceEl;
+};
+
+ConBoard.Head.prototype.updatePiece = function(i, hh, mm) {
+	this.pieces[i].innerHTML = hh + ':' + mm;
+};
+
+ConBoard.Head.prototype.update = function(time) {
+	var hour = time.hours,
+		startMin = (time.minutes >= 30)? '30': '00',
+		pieceCount = this.pieces.length,
+		minutes;
+
+	if (time.minutes < 10) {
+		minutes = '0' + time.minutes.toString();
+	}
+	else {
+		minutes = time.minutes;
+	}
+
+	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
+
+	for (var i = 0; i < pieceCount; ++i) {
+		this.updatePiece(i, hour, startMin);
+		if (startMin == '30') {
+			hour = (hour < 23)? (hour+1) : 0;
+			startMin = '00';
+		}
+		else {
+			startMin = 30;
+		}
+	};
+};
+window.ConBoard = window.ConBoard || {};
 window.ConBoard.Api = {};
 ConBoard.Api.GetCats = function(callback, scope) {
 	var request = new ConBoard.Request(
@@ -119,123 +490,6 @@ ConBoard.Api._return = function(error, response, callback, scope) {
 		callback.call(scope ,error, undefined);
 	}
 };window.ConBoard = window.ConBoard || {};
-ConBoard.Body = function(config) {
-	this.config = config;
-
-	this.cats = [];
-
-	this.createEl();
-};
-
-ConBoard.Body.prototype.getEl = function() {
-	return this.el;
-};
-
-ConBoard.Body.prototype.createEl = function() {
-	this.el = document.createElement('div');
-	this.el.setAttribute('class', 'con-board-body');
-};
-
-ConBoard.Body.prototype.getCat = function(index) {
-	return this.cats[i] || {};
-};
-
-ConBoard.Body.prototype.getCatCount = function() {
-	return this.cats.length;
-};
-
-ConBoard.Body.prototype.createCat = function(data) {
-	var cmp = new ConBoard.Cat({
-		name: data.name,
-		id: this.cats.length,
-		resolution: data.resolution
-	});
-	this.cats.push(cmp);
-	this.el.appendChild(cmp.getEl());
-	this.loadCat(cmp);
-};
-
-ConBoard.Body.prototype.loadCat = function(cat) {
-	ConBoard.Api.GetList(cat.name, function(err, res) {
-		cat.fillCat(res);
-	});
-};window.ConBoard = window.ConBoard || {};
-ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
-
-ConBoard.Board = function(boardDiv, config) {
-	this.resolution = config.resolution;
-
-	this.cats = [];
-	this.container = boardDiv;
-	this.container.style.width = document.body.clientWidth;
-
-	this.createHead();
-	this.createBody();
-	this.getCats();
-	this.startTimer();
-};
-
-ConBoard.Board.prototype.createHead = function() {
-	this.head = new ConBoard.Head({
-
-	});
-	this.container.appendChild(this.head.getEl());
-};
-
-ConBoard.Board.prototype.createBody = function() {
-	this.body = new ConBoard.Body({
-		catKey: this.catKey
-	});
-
-	this.container.appendChild(this.body.getEl());
-};
-
-ConBoard.Board.prototype.updateHead = function(time) {
-	if (time.minutes < 10) {
-		time.minutes = '0' + time.minutes.toString();
-	}
-	this.head.update(time);
-	console.log('Starting interval is', time.hours, time.startMinutes);
-
-}
-
-ConBoard.Board.prototype.tick = function(event) {
-	var startMinutes = (event.minutes > 30) ? 30 : 00;
-	event.startMinutes = startMinutes;
-	this.updateHead(event);
-
-	for (var i in this.cats) {
-		this.cats[i].update(event.tick);
-	}
-};
-
-ConBoard.Board.prototype.startTimer = function() {
-	this.timer = new ConBoard.Timer();
-	this.timer.Start();
-	this.timer.on(
-		this.tick,
-		this
-	);
-};
-
-ConBoard.Board.prototype.getCats = function() {
-	var me = this;
-	var request = ConBoard.Api.GetCats(function(error, response) {
-		me.loadCats(response);
-	});
-};
-
-ConBoard.Board.prototype.loadCats = function(cats) {
-	for (var cat in cats) {
-		this.body.createCat({
-			name: cats[cat],
-			id: cat,
-			resolution: this.resolution,
-			key: 'location'
-		});
-	};
-};
-window.ConBoard = window.ConBoard || {};
 ConBoard.Request = function(method, url, callback) {
 	var me = this;
 	this.xhr = new XMLHttpRequest();
@@ -258,123 +512,4 @@ ConBoard.Request.prototype.onStateChange = function(xhr, callback) {
 	if (xhr.readyState === 4) {
 		callback(error, xhr.response);
 	}
-};window.ConBoard = window.ConBoard || {};
-ConBoard.Head = function(config) {
-	this.resolution = config.resolution;
-	this.interval = config.interval;
-	this.pieces = [];
-	this.createEl();
-	this.lineEl.innerHTML;
-	for (var i = 0; i < this.resolution; i++) {
-		this.createPiece(i);
-	};
-};
-
-ConBoard.Head.prototype.getEl = function() {
-	return this.el;
-};
-
-ConBoard.Head.prototype.createEl = function() {
-	var headEl = document.createElement('div'),
-		timeEl = document.createElement('div'),
-		lineEl = document.createElement('div'),
-		logoEl = document.createElement('div');
-
-	headEl.setAttribute('class', 'con-board-head');
-	lineEl.setAttribute('class', 'con-board-head-line');
-	timeEl.setAttribute('class', 'con-board-head-time');
-	logoEl.setAttribute('class', 'con-board-head-logo');
-
-	headEl.appendChild(logoEl);
-	headEl.appendChild(lineEl);
-	headEl.appendChild(timeEl);
-
-	this.logo = logoEl;
-	this.lineEl = lineEl;
-	this.timeEl = timeEl;
-	this.el = headEl;
-};
-
-ConBoard.Head.prototype.createPiece = function(interval) {
-	var pieceEl = document.createEl('div');
-};
-
-ConBoard.Head.prototype.update = function(time) {
-	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + time.hours + ':' + time.minutes;
-};
-window.ConBoard = window.ConBoard || {};
-ConBoard.Programme = function(data) {
-	this.pid = data.pid;
-	this.title = data.title;
-	this.startTime = data.startTime;
-	this.endTime = data.endTime;
-	this.author = data.author;
-	this.location = data.location;
-	this.programLine = data.programLine;
-	this.type = data.type;
-	this.annotation = data.annotation;
-
-	this.el = undefined;
-
-	this.createEl();
-};
-// Helper method, later, data will be loaded from outside
-ConBoard.Programme.prototype.load = function(id) {
-
-};
-
-ConBoard.Programme.prototype.destroy = function() {
-	this.el.parentnode.removeChild(this.el);
-}
-
-ConBoard.Programme.prototype.createEl = function() {
-	var pEl = document.createEl('div');
-}
-
-ConBoard.Programme.prototype.getEl = function() {
-	return this.el;
-};
-window.ConBoard = window.ConBoard || {};
-ConBoard.Timer = function() {
-	this.interval = 500;
-	this.listeners = [];
-};
-
-ConBoard.Timer.prototype.Start = function() {
-	this.interval = window.setInterval(this.Tick.bind(this), this.interval);
-};
-
-ConBoard.Timer.prototype.Tick = function() {
-	var tick = Date.now();
-	var tock = new Date(tick);
-	var stamp = {
-		tick: tick,
-		day: tock.getDay(),
-		hours: tock.getHours(),
-		minutes: tock.getMinutes()
-	};
-
-	for(var i in this.listeners) {
-		var fn = this.listeners[i].fn,
-			sc = this.listeners[i].scope || window;
-		fn.call(sc, stamp);
-	}
-};
-
-ConBoard.Timer.prototype.on = function(fn, scope) {
-	this.listeners.push({fn: fn, scope: scope});
-};
-
-ConBoard.Timer.prototype.off = function(fn, scope) {
-	for (var i in this.listeners) {
-		var listener = listeners[i];
-		if (listener.fn === fn && scope === listener.scope) {
-			listeners.splice(i, 1);
-			return;
-		}
-	}
-};
-
-ConBoard.Timer.prototype.Stop = function() {
-	window.clearInterval(this.interval);
 };
