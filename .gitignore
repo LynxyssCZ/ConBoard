@@ -1,6 +1,8 @@
 # Data files
 data
 
+.sass-cache
+
 # Logs
 logs
 *.log
