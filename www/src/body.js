@@ -25,8 +25,8 @@ ConBoard.Body.prototype.update = function(time) {
 				else {
 					notice.create();
 					this.el.appendChild(notice.getEl());
+					this.masked++;
 				}
-				this.masked++;
 			}
 			else if(notice.end < time.tick && notice.rendered) {
 				notice.destroy();
