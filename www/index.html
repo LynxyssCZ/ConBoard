@@ -14,10 +14,7 @@
 			var boardDiv = document.getElementById('ConBoard');
 			var board = new ConBoard.Board(
 				boardDiv,
-				{
-					resolution: 5,			// Number of cells in time grid
-					interval: 30*60*1000	// ms from minutes
-				}
+				settings
 			);
 			var windowHeight = window.innerHeight;
 			var windowWidth = window.innerWidth;

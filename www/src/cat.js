@@ -18,6 +18,8 @@ ConBoard.Cat.prototype.getProgCount = function() {
 	return this.progs.length;
 };
 
+
+
 ConBoard.Cat.prototype.fillCat = function(data) {
 	this.content = data;
 	this.content.sort(function(a, b) {
@@ -27,11 +29,6 @@ ConBoard.Cat.prototype.fillCat = function(data) {
 };
 
 ConBoard.Cat.prototype.update = function(time) {
-	if (!this.dirty && time.startTick === this.startTick) {
-		console.log('Cat update skipped');
-		return;
-	}
-
 	// move pogIndex if there are some 'top' programmes out of the window
 	for (var i = this.progIndex; i < this.content.length; i++) {
 		if (this.content[i].endTime < time.startTick) {
@@ -39,6 +36,9 @@ ConBoard.Cat.prototype.update = function(time) {
 		}
 	}
 
+	if (!this.dirty && time.startTick === this.startTick) {
+		return;
+	}
 	this.dirty = false;
 	this.startTick = time.startTick;
 
@@ -47,11 +47,12 @@ ConBoard.Cat.prototype.update = function(time) {
 		return;
 	}
 
-	this.updateBody(time);
 	// Check if 'top' programme is not too far away
 	if (this.progs.length === 0 && this.content.length && this.content[this.progIndex].startTime > time.endTick) {
 		this.tillStart = ConBoard.TickDiff(time.tick, this.content[this.progIndex].startTime);
 	}
+
+	this.updateBody(time);
 },
 
 ConBoard.Cat.prototype.updateBody = function(time) {

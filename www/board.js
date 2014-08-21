@@ -1,4 +1,233 @@
 window.ConBoard = window.ConBoard || {};
+window.ConBoard.Api = {};
+ConBoard.Api.GetCats = function(callback, scope) {
+	var request = new ConBoard.Request(
+		'GET',
+		'/categories/',
+		function(err, res) {
+			ConBoard.Api._return(err, res, callback, scope)
+	});
+	request.send();
+	return request;
+};
+
+ConBoard.Api.GetList = function(catName, callback, scope) {
+	var request = new ConBoard.Request(
+		'GET',
+		'/programmes/location/' + catName + '/',
+		function(err, res) {
+			ConBoard.Api._return(err, res, callback, scope)
+	});
+	request.send();
+	return request;
+};
+
+ConBoard.Api.GetProgramme = function(id, callback, scope) {
+	var request = new ConBoard.Request(
+		'GET',
+		'/programmes/' + id + '/',
+		function(err, res) {
+			ConBoard.Api._return(err, res, callback, scope)
+	});
+	request.send();
+	return request;
+};
+
+ConBoard.Api.GetAllProgrammes = function(callback, scope) {
+	var request = new ConBoard.Request(
+		'GET',
+		'/programmes/',
+		function(err, res) {
+			ConBoard.Api._return(err, res, callback, scope)
+	});
+	request.send();
+	return request;
+};
+
+ConBoard.Api._return = function(error, response, callback, scope) {
+	var res, err;
+	scope = scope || window;
+	if (!error && !!response) {
+		try {
+			res = JSON.parse(response);
+		}
+		catch (e) {
+			err = e;
+		}
+		callback.call(scope, err, res);
+	}
+	else {
+		callback.call(scope ,error, undefined);
+	}
+};
+window.ConBoard = window.ConBoard || {};
+ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
+ConBoard.DeltaToString = function(delta) {
+	var ms = delta % 1000;
+	delta = (delta - ms) / 1000;
+	var sec = delta % 60;
+	delta = (delta - sec) / 60;
+	var min = delta % 60;
+	var hrs = (delta - min) /60;
+	return ((hrs > 0)? (hrs + ':'): '' ) + ((min > 0)? (((min < 10)? ('0'+min) : min) + ':') : '') + ((sec < 10)? ('0'+sec) : sec);
+};
+
+ConBoard.TickDiff = function(ts1, ts2) {
+	return (ts1 > ts2)? ts1 - ts2 : ts2 - ts1;
+};
+
+ConBoard.Board = function(boardDiv, config) {
+	this.resolution = config.resolution;
+	this.interval = config.interval;
+	this.timeDelay = config.timeDelay;
+	this.notices = config.notices;
+
+	this.minutes;
+
+	this.cats = [];
+	this.container = boardDiv;
+	this.container.style.width = document.body.clientWidth;
+
+	this.createHead();
+	this.createBody();
+	this.getCats();
+	this.startTimer();
+};
+
+ConBoard.Board.prototype.createHead = function() {
+	this.head = new ConBoard.Head({
+		resolution: this.resolution,
+		interval: this.interval
+	});
+	this.container.appendChild(this.head.getEl());
+};
+
+ConBoard.Board.prototype.createBody = function() {
+	this.body = new ConBoard.Body({
+		catKey: this.catKey,
+		timeDelay: this.timeDelay,
+		},
+		this.notices
+	);
+
+	this.container.appendChild(this.body.getEl());
+};
+
+ConBoard.Board.prototype.updateHead = function(time) {
+	this.head.update(time);
+}
+
+ConBoard.Board.prototype.tick = function(event) {
+	event.startTick = event.tick - (event.tick % this.interval);
+	event.endTick = event.startTick + (this.resolution * this.interval);
+
+	var startMinutes = (event.minutes > 30) ? 30 : 00;
+	event.startMinutes = startMinutes;
+
+	this.head.update(event);
+
+	this.body.update(event);
+};
+
+ConBoard.Board.prototype.startTimer = function() {
+	this.timer = new ConBoard.Timer(500);
+	this.timer.on(
+		this.tick,
+		this
+	);
+	this.timer.Start();
+};
+
+ConBoard.Board.prototype.getCats = function() {
+	var me = this;
+	var request = ConBoard.Api.GetCats(function(error, response) {
+		me.loadCats(response);
+	});
+};
+
+ConBoard.Board.prototype.loadCats = function(cats) {
+	for (var cat in cats) {
+		this.body.createCat({
+			name: cats[cat],
+			id: cat,
+			resolution: this.resolution,
+			interval: this.interval,
+			key: 'location'
+		});
+	};
+};
+
+window.ConBoard = window.ConBoard || {};
+ConBoard.Body = function(config, notices) {
+	this.config = config;
+	this.notices = notices;
+
+	this.cats = [];
+
+	this.createEl();
+};
+
+ConBoard.Body.prototype.update = function(time) {
+	for (var i = this.cats.length - 1; i >= 0; i--) {
+		this.cats[i].update(time);
+	}
+
+	if (this.notices) {
+		for (var i = 0; i < this.notices.length; i++) {
+			var notice = this.notices[i];
+			if(notice.start < time.tick && notice.end > time.tick) {
+				console.log('STOP, notice time');
+				if (notice.rendered) {
+					notice.update();
+				}
+				else {
+					notice.create();
+					this.el.appendChild(notice.getEl());
+				}
+			}
+			else if(notice.end < time.tick && notice.rendered) {
+				notice.destroy();
+			}
+		}
+	}
+
+};
+
+ConBoard.Body.prototype.getEl = function() {
+	return this.el;
+};
+
+ConBoard.Body.prototype.createEl = function() {
+	this.el = document.createElement('div');
+	this.el.setAttribute('class', 'con-board-body');
+};
+
+ConBoard.Body.prototype.getCat = function(index) {
+	return this.cats[i] || {};
+};
+
+ConBoard.Body.prototype.getCatCount = function() {
+	return this.cats.length;
+};
+
+ConBoard.Body.prototype.createCat = function(data) {
+	var cmp = new ConBoard.Cat({
+		name: data.name,
+		id: this.cats.length,
+		resolution: data.resolution,
+		interval: data.interval
+	});
+	this.cats.push(cmp);
+	this.el.appendChild(cmp.getEl());
+	this.loadCat(cmp);
+};
+
+ConBoard.Body.prototype.loadCat = function(cat) {
+	ConBoard.Api.GetList(cat.name, function(err, res) {
+		cat.fillCat(res);
+	});
+};
+window.ConBoard = window.ConBoard || {};
 ConBoard.Cat = function(data) {
 	this.name = data.name;
 	this.id = data.id;
@@ -18,6 +247,8 @@ ConBoard.Cat.prototype.getProgCount = function() {
 	return this.progs.length;
 };
 
+
+
 ConBoard.Cat.prototype.fillCat = function(data) {
 	this.content = data;
 	this.content.sort(function(a, b) {
@@ -27,11 +258,6 @@ ConBoard.Cat.prototype.fillCat = function(data) {
 };
 
 ConBoard.Cat.prototype.update = function(time) {
-	if (!this.dirty && time.startTick === this.startTick) {
-		console.log('Cat update skipped');
-		return;
-	}
-
 	// move pogIndex if there are some 'top' programmes out of the window
 	for (var i = this.progIndex; i < this.content.length; i++) {
 		if (this.content[i].endTime < time.startTick) {
@@ -39,6 +265,9 @@ ConBoard.Cat.prototype.update = function(time) {
 		}
 	}
 
+	if (!this.dirty && time.startTick === this.startTick) {
+		return;
+	}
 	this.dirty = false;
 	this.startTick = time.startTick;
 
@@ -47,11 +276,12 @@ ConBoard.Cat.prototype.update = function(time) {
 		return;
 	}
 
-	this.updateBody(time);
 	// Check if 'top' programme is not too far away
 	if (this.progs.length === 0 && this.content.length && this.content[this.progIndex].startTime > time.endTick) {
 		this.tillStart = ConBoard.TickDiff(time.tick, this.content[this.progIndex].startTime);
 	}
+
+	this.updateBody(time);
 },
 
 ConBoard.Cat.prototype.updateBody = function(time) {
@@ -155,7 +385,8 @@ ConBoard.Cat.prototype.createMarker = function() {
 	var markEl = document.createElement('div');
 	markEl.setAttribute('class', 'con-board-cat-body-marker');
 	return markEl;
-};window.ConBoard = window.ConBoard || {};
+};
+window.ConBoard = window.ConBoard || {};
 ConBoard.Head = function(config) {
 	this.resolution = config.resolution;
 	this.interval = config.interval;
@@ -213,7 +444,6 @@ ConBoard.Head.prototype.update = function(time) {
 		minutes;
 
 	if (time.minutes === this.minutes) {
-		console.log('Update of head skiped fully');
 		return;
 	}
 	this.minutes = time.minutes;
@@ -228,7 +458,6 @@ ConBoard.Head.prototype.update = function(time) {
 	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
 
 	if (this.startTick === time.startTick) {
-		console.log('Headline skipped');
 		return;
 	}
 	this.startTick = time.startTick;
@@ -242,146 +471,8 @@ ConBoard.Head.prototype.update = function(time) {
 		tock.setTime(tock.getTime() + this.interval);
 	};
 };
+
 window.ConBoard = window.ConBoard || {};
-ConBoard.DayEnum = ['Neděle', 'Pondělí', 'Uterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
-ConBoard.DeltaToString = function(delta) {
-	var ms = delta % 1000;
-	delta = (delta - ms) / 1000;
-	var sec = delta % 60;
-	delta = (delta - sec) / 60;
-	var min = delta % 60;
-	var hrs = (delta - min) /60;
-	return hrs + ':' + min + ':' + ((sec < 10)? ('0'+sec) : sec);
-};
-
-ConBoard.TickDiff = function(ts1, ts2) {
-	return (ts1 > ts2)? ts1 - ts2 : ts2 - ts1;
-};
-
-ConBoard.Board = function(boardDiv, config) {
-	this.resolution = config.resolution;
-	this.interval = config.interval;
-
-	this.minutes;
-
-	this.cats = [];
-	this.container = boardDiv;
-	this.container.style.width = document.body.clientWidth;
-
-	this.createHead();
-	this.createBody();
-	this.getCats();
-	this.startTimer();
-};
-
-ConBoard.Board.prototype.createHead = function() {
-	this.head = new ConBoard.Head({
-		resolution: this.resolution,
-		interval: this.interval
-	});
-	this.container.appendChild(this.head.getEl());
-};
-
-ConBoard.Board.prototype.createBody = function() {
-	this.body = new ConBoard.Body({
-		catKey: this.catKey
-	});
-
-	this.container.appendChild(this.body.getEl());
-};
-
-ConBoard.Board.prototype.updateHead = function(time) {
-	this.head.update(time);
-}
-
-ConBoard.Board.prototype.tick = function(event) {
-	event.startTick = event.tick - (event.tick % this.interval);
-	event.endTick = event.startTick + (this.resolution * this.interval);
-
-	var startMinutes = (event.minutes > 30) ? 30 : 00;
-	event.startMinutes = startMinutes;
-
-	this.head.update(event);
-
-	this.body.update(event);
-};
-
-ConBoard.Board.prototype.startTimer = function() {
-	this.timer = new ConBoard.Timer(15000);
-	this.timer.on(
-		this.tick,
-		this
-	);
-	this.timer.Start();
-};
-
-ConBoard.Board.prototype.getCats = function() {
-	var me = this;
-	var request = ConBoard.Api.GetCats(function(error, response) {
-		me.loadCats(response);
-	});
-};
-
-ConBoard.Board.prototype.loadCats = function(cats) {
-	for (var cat in cats) {
-		this.body.createCat({
-			name: cats[cat],
-			id: cat,
-			resolution: this.resolution,
-			interval: this.interval,
-			key: 'location'
-		});
-	};
-};
-window.ConBoard = window.ConBoard || {};
-ConBoard.Body = function(config) {
-	this.config = config;
-
-	this.cats = [];
-
-	this.createEl();
-};
-
-ConBoard.Body.prototype.update = function(time) {
-	for (var i = this.cats.length - 1; i >= 0; i--) {
-		this.cats[i].update(time);
-	}
-};
-
-ConBoard.Body.prototype.getEl = function() {
-	return this.el;
-};
-
-ConBoard.Body.prototype.createEl = function() {
-	this.el = document.createElement('div');
-	this.el.setAttribute('class', 'con-board-body');
-};
-
-ConBoard.Body.prototype.getCat = function(index) {
-	return this.cats[i] || {};
-};
-
-ConBoard.Body.prototype.getCatCount = function() {
-	return this.cats.length;
-};
-
-ConBoard.Body.prototype.createCat = function(data) {
-	var cmp = new ConBoard.Cat({
-		name: data.name,
-		id: this.cats.length,
-		resolution: data.resolution,
-		interval: data.interval
-	});
-	this.cats.push(cmp);
-	this.el.appendChild(cmp.getEl());
-	this.loadCat(cmp);
-};
-
-ConBoard.Body.prototype.loadCat = function(cat) {
-	ConBoard.Api.GetList(cat.name, function(err, res) {
-		cat.fillCat(res);
-	});
-};window.ConBoard = window.ConBoard || {};
 ConBoard.Programme = function(data) {
 	this.pid = data.pid;
 	this.startTime = data.startTime;
@@ -435,6 +526,31 @@ ConBoard.Programme.prototype.updateBody = function() {
 ConBoard.Programme.prototype.getEl = function() {
 	return this.el;
 };
+
+window.ConBoard = window.ConBoard || {};
+ConBoard.Request = function(method, url, callback) {
+	var me = this;
+	this.xhr = new XMLHttpRequest();
+	this.method = method;
+	this.url = url;
+	this.callback = callback;
+
+	this.xhr.onreadystatechange = function() {
+		me.onStateChange(me.xhr, me.callback);
+	};
+	this.xhr.open(this.method, this.url);
+};
+
+ConBoard.Request.prototype.send = function() {
+	this.xhr.send();
+};
+
+ConBoard.Request.prototype.onStateChange = function(xhr, callback) {
+	var error;
+	if (xhr.readyState === 4) {
+		callback(error, xhr.response);
+	}
+};
 window.ConBoard = window.ConBoard || {};
 ConBoard.Timer = function(interval) {
 	this.interval = interval || 500;
@@ -447,7 +563,8 @@ ConBoard.Timer.prototype.Start = function() {
 };
 
 ConBoard.Timer.prototype.Tick = function() {
-	var tick = Date.now() + 257908000 + (3*30*60*1000);
+	//var tick = Date.now() + 257908000 + (3*30*60*1000);
+	var tick = Date.now();
 	var tock = new Date(tick);
 	var stamp = {
 		tick: tick,
@@ -479,88 +596,54 @@ ConBoard.Timer.prototype.off = function(fn, scope) {
 
 ConBoard.Timer.prototype.Stop = function() {
 	window.clearInterval(this.interval);
-};window.ConBoard = window.ConBoard || {};
-window.ConBoard.Api = {};
-ConBoard.Api.GetCats = function(callback, scope) {
-	var request = new ConBoard.Request(
-		'GET',
-		'/categories/',
-		function(err, res) {
-			ConBoard.Api._return(err, res, callback, scope)
-	});
-	request.send();
-	return request;
+};
+window.ConBoard = window.ConBoard || {};
+ConBoard.Notice = function(config) {
+	this.el;
+	this.content;
+
+	this.start = config.start;
+	this.end = config.end;
+	this.callback = config.callback;
+	this.class = config.class;
+
+	this.rendered = false;
 };
 
-ConBoard.Api.GetList = function(catName, callback, scope) {
-	var request = new ConBoard.Request(
-		'GET',
-		'/programmes/location/' + catName + '/',
-		function(err, res) {
-			ConBoard.Api._return(err, res, callback, scope)
-	});
-	request.send();
-	return request;
+ConBoard.Notice.prototype.create = function() {
+	this.rendered = true;
+	this.createMask();
+	this.createContent();
+	this.callback(this);
 };
 
-ConBoard.Api.GetProgramme = function(id, callback, scope) {
-	var request = new ConBoard.Request(
-		'GET',
-		'/programmes/' + id + '/',
-		function(err, res) {
-			ConBoard.Api._return(err, res, callback, scope)
-	});
-	request.send();
-	return request;
+ConBoard.Notice.prototype.getEl = function() {
+	return this.el;
+}
+
+ConBoard.Notice.prototype.createContent = function() {
+	this.content = document.createElement('div');
+	this.content.setAttribute('class', 'notice' + ((this.class)? ' '+this.class : ''));
+	this.el.appendChild(this.content);
 };
 
-ConBoard.Api.GetAllProgrammes = function(callback, scope) {
-	var request = new ConBoard.Request(
-		'GET',
-		'/programmes/',
-		function(err, res) {
-			ConBoard.Api._return(err, res, callback, scope)
-	});
-	request.send();
-	return request;
+ConBoard.Notice.prototype.setContent = function(content) {
+	this.content.innerHTML = content;
 };
 
-ConBoard.Api._return = function(error, response, callback, scope) {
-	var res, err;
-	scope = scope || window;
-	if (!error && !!response) {
-		try {
-			res = JSON.parse(response);
-		}
-		catch (e) {
-			err = e;
-		}
-		callback.call(scope, err, res);
-	}
-	else {
-		callback.call(scope ,error, undefined);
-	}
-};window.ConBoard = window.ConBoard || {};
-ConBoard.Request = function(method, url, callback) {
-	var me = this;
-	this.xhr = new XMLHttpRequest();
-	this.method = method;
-	this.url = url;
-	this.callback = callback;
-
-	this.xhr.onreadystatechange = function() {
-		me.onStateChange(me.xhr, me.callback);
-	};
-	this.xhr.open(this.method, this.url);
+ConBoard.Notice.prototype.createMask = function() {
+	maskEl = document.createElement('div');
+	maskEl.setAttribute('class', 'con-board-body-mask' + ((this.class)? ' '+this.class : ''));
+	this.el = maskEl;
 };
 
-ConBoard.Request.prototype.send = function() {
-	this.xhr.send();
+ConBoard.Notice.prototype.destroy = function() {
+	this.rendered = false;
+	this.el.parentNode.removeChild(this.el);
+	delete this.el;
+	delete this.content;
 };
 
-ConBoard.Request.prototype.onStateChange = function(xhr, callback) {
-	var error;
-	if (xhr.readyState === 4) {
-		callback(error, xhr.response);
-	}
+ConBoard.Notice.prototype.update = function() {
+	this.callback(this);
 };

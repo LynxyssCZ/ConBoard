@@ -1,0 +1,17 @@
+{
+	"src": [
+		"www/src/Api.js",
+		"www/src/board.js",
+		"www/src/body.js",
+		"www/src/cat.js",
+		"www/src/head.js",
+		"www/src/programme.js",
+		"www/src/request.js",
+		"www/src/timer.js",
+		"www/src/notice.js"
+	],
+	"min": "www/board.js",
+	"build": "www/board.min.js",
+	"scss": "www/board.scss",
+	"css": "www/board.css"
+}

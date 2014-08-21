@@ -1,6 +1,7 @@
 window.ConBoard = window.ConBoard || {};
-ConBoard.Body = function(config) {
+ConBoard.Body = function(config, notices) {
 	this.config = config;
+	this.notices = notices;
 
 	this.cats = [];
 
@@ -11,6 +12,26 @@ ConBoard.Body.prototype.update = function(time) {
 	for (var i = this.cats.length - 1; i >= 0; i--) {
 		this.cats[i].update(time);
 	}
+
+	if (this.notices) {
+		for (var i = 0; i < this.notices.length; i++) {
+			var notice = this.notices[i];
+			if(notice.start < time.tick && notice.end > time.tick) {
+				console.log('STOP, notice time');
+				if (notice.rendered) {
+					notice.update();
+				}
+				else {
+					notice.create();
+					this.el.appendChild(notice.getEl());
+				}
+			}
+			else if(notice.end < time.tick && notice.rendered) {
+				notice.destroy();
+			}
+		}
+	}
+
 };
 
 ConBoard.Body.prototype.getEl = function() {

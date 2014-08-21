@@ -10,7 +10,8 @@ ConBoard.Timer.prototype.Start = function() {
 };
 
 ConBoard.Timer.prototype.Tick = function() {
-	var tick = Date.now() + 257908000 + (3*30*60*1000);
+	//var tick = Date.now() + 257908000 + (3*30*60*1000);
+	var tick = Date.now();
 	var tock = new Date(tick);
 	var stamp = {
 		tick: tick,

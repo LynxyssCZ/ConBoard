@@ -17,7 +17,9 @@
 		"xml2js": "*",
 		"express": "3.x",
 		"colors": "*",
-		"eyes": "*"
+		"eyes": "*",
+		"shelljs" : "*",
+		"uglify-js" : "*"
 	},
 	"engines": {
 		"node": ">=0.8"

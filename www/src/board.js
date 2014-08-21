@@ -7,7 +7,7 @@ ConBoard.DeltaToString = function(delta) {
 	delta = (delta - sec) / 60;
 	var min = delta % 60;
 	var hrs = (delta - min) /60;
-	return hrs + ':' + min + ':' + ((sec < 10)? ('0'+sec) : sec);
+	return ((hrs > 0)? (hrs + ':'): '' ) + ((min > 0)? (((min < 10)? ('0'+min) : min) + ':') : '') + ((sec < 10)? ('0'+sec) : sec);
 };
 
 ConBoard.TickDiff = function(ts1, ts2) {
@@ -17,6 +17,8 @@ ConBoard.TickDiff = function(ts1, ts2) {
 ConBoard.Board = function(boardDiv, config) {
 	this.resolution = config.resolution;
 	this.interval = config.interval;
+	this.timeDelay = config.timeDelay;
+	this.notices = config.notices;
 
 	this.minutes;
 
@@ -40,8 +42,11 @@ ConBoard.Board.prototype.createHead = function() {
 
 ConBoard.Board.prototype.createBody = function() {
 	this.body = new ConBoard.Body({
-		catKey: this.catKey
-	});
+		catKey: this.catKey,
+		timeDelay: this.timeDelay,
+		},
+		this.notices
+	);
 
 	this.container.appendChild(this.body.getEl());
 };
@@ -63,7 +68,7 @@ ConBoard.Board.prototype.tick = function(event) {
 };
 
 ConBoard.Board.prototype.startTimer = function() {
-	this.timer = new ConBoard.Timer(15000);
+	this.timer = new ConBoard.Timer(500);
 	this.timer.on(
 		this.tick,
 		this

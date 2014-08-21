@@ -56,7 +56,6 @@ ConBoard.Head.prototype.update = function(time) {
 		minutes;
 
 	if (time.minutes === this.minutes) {
-		console.log('Update of head skiped fully');
 		return;
 	}
 	this.minutes = time.minutes;
@@ -71,7 +70,6 @@ ConBoard.Head.prototype.update = function(time) {
 	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
 
 	if (this.startTick === time.startTick) {
-		console.log('Headline skipped');
 		return;
 	}
 	this.startTick = time.startTick;
