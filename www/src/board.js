@@ -32,7 +32,8 @@ ConBoard.Board = function(boardDiv, config) {
 
 ConBoard.Board.prototype.createHead = function() {
 	this.head = new ConBoard.Head({
-		resolution: this.resolution
+		resolution: this.resolution,
+		interval: this.interval
 	});
 	this.container.appendChild(this.head.getEl());
 };
@@ -50,17 +51,14 @@ ConBoard.Board.prototype.updateHead = function(time) {
 }
 
 ConBoard.Board.prototype.tick = function(event) {
-	console.log('tick');
-	if (this.minutes === event.minutes) {
-		console.log('nop');
-		//return;
-	}
-	this.minutes = event.minutes;
+	event.startTick = event.tick - (event.tick % this.interval);
+	event.endTick = event.startTick + (this.resolution * this.interval);
+
 	var startMinutes = (event.minutes > 30) ? 30 : 00;
 	event.startMinutes = startMinutes;
 
-	event.endTick = event.tick + (this.resolution * this.interval);
 	this.head.update(event);
+
 	this.body.update(event);
 };
 

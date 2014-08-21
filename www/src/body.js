@@ -10,7 +10,7 @@ ConBoard.Body = function(config) {
 ConBoard.Body.prototype.update = function(time) {
 	for (var i = this.cats.length - 1; i >= 0; i--) {
 		this.cats[i].update(time);
-	};
+	}
 };
 
 ConBoard.Body.prototype.getEl = function() {

@@ -5,6 +5,7 @@ ConBoard.Cat = function(data) {
 	this.resolution = data.resolution;
 	this.interval = data.interval;
 
+	this.loading = false;
 	this.progIndex = 0;
 	this.tillStart;
 	this.content = [];
@@ -22,15 +23,25 @@ ConBoard.Cat.prototype.fillCat = function(data) {
 	this.content.sort(function(a, b) {
 		return (a.startTime < b.startTime? -1 : 1);
 	});
+	this.dirty = true;
 };
 
 ConBoard.Cat.prototype.update = function(time) {
+	if (!this.dirty && time.startTick === this.startTick) {
+		console.log('Cat update skipped');
+		return;
+	}
+
 	// move pogIndex if there are some 'top' programmes out of the window
 	for (var i = this.progIndex; i < this.content.length; i++) {
-		if (this.content[i].endTime < time.tick) {
+		if (this.content[i].endTime < time.startTick) {
 			this.progIndex = i+1;
 		}
 	}
+
+	this.dirty = false;
+	this.startTick = time.startTick;
+
 	// Check if we are no on the end of the programme already
 	if (this.progIndex >= this.content.length) {
 		return;
@@ -46,8 +57,7 @@ ConBoard.Cat.prototype.update = function(time) {
 ConBoard.Cat.prototype.updateBody = function(time) {
 	// Delete old programmes
 	for (var i = 0; i < this.progs.length; i++) {
-		if (this.progs[i].endTime < time.tick) {
-			console.log('Deleting', this.progs[i]);
+		if (this.progs[i].endTime <= time.startTick) {
 			this.progs[i].destroy();
 			this.progs.splice(i, 1);
 			i--;
@@ -58,7 +68,7 @@ ConBoard.Cat.prototype.updateBody = function(time) {
 	};
 	// Render new programmes that fit
 	for (var i = this.progIndex; i < this.content.length; i++) {
-		if (this.content[i].endTime > time.tick
+		if (this.content[i].endTime > time.startTick
 			&& this.content[i].startTime < time.endTick
 			&& !this.content[i].rendered
 		) {
@@ -70,28 +80,43 @@ ConBoard.Cat.prototype.updateBody = function(time) {
 			break;
 		}
 	}
+
+	for (var i = 0; i < this.progs.length; i++) {
+		var prog = this.progs[i];
+		var length = ((prog.endTime - prog.startTime)/this.interval)*(100/this.resolution);
+		var position = (prog.startTime-time.startTick)/(this.interval)*(100/this.resolution);
+		if (position <= 0 && (position+length) >= 100) {
+			// Full board events
+			position = 0;
+			length = 100;
+		}
+		else if (position <= 0) {
+			length = length + position;
+			position = 0;
+		}
+		else if ((position + length) > 100) {
+			length = 100 - position;
+		}
+		prog.updatePosition(position);
+		prog.setWidth(length);
+	};
 };
 
 ConBoard.Cat.prototype.createProgramme = function(data, time) {
-	console.log('Rendering');
-	console.log(data);
 	var prog = new ConBoard.Programme(data);
+
+	ConBoard.Api.GetProgramme(
+		data.pid,
+		function(err, res) {
+			if (!err && !!res) {
+				prog.setDetails(res);
+			}
+		},
+		this
+	);
+
 	this.progs.push(prog);
 	this.body.appendChild(prog.getEl());
-	var length = ((data.endTime - data.startTime)/this.interval)*(100/this.resolution);
-	var position = (time.tick-data.startTime)/(this.interval);
-	if (data.startTime > time.tick && data.endTime > data.endTick) {
-		// Full board events
-		position = 0;
-		length = 100;
-	}
-	else if (data.startTime > time.tick) {
-		position = 0;
-	}
-	else if (data.endTime > time.endTick) {
-		// Handle right side overwflow
-	}
-
 };
 
 ConBoard.Cat.prototype.getEl = function() {
@@ -118,6 +143,7 @@ ConBoard.Cat.prototype.createEl = function() {
 
 	for (var i = 0; i < this.resolution; i++) {
 		var marker = this.createMarker();
+		marker.setAttribute('class', marker.getAttribute('class') + ' marker-'+i);
 		this.markers.push(marker);
 		catBody.appendChild(marker);
 	};

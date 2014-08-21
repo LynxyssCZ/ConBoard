@@ -3,6 +3,7 @@ ConBoard.Head = function(config) {
 	this.resolution = config.resolution;
 	this.interval = config.interval;
 	this.pieces = [];
+
 	this.createEl();
 	this.lineEl.innerHTML;
 	for (var i = 0; i < this.resolution; i++) {
@@ -50,9 +51,15 @@ ConBoard.Head.prototype.updatePiece = function(i, hh, mm) {
 
 ConBoard.Head.prototype.update = function(time) {
 	var hour = time.hours,
-		startMin = (time.minutes >= 30)? '30': '00',
+		startMin,
 		pieceCount = this.pieces.length,
 		minutes;
+
+	if (time.minutes === this.minutes) {
+		console.log('Update of head skiped fully');
+		return;
+	}
+	this.minutes = time.minutes;
 
 	if (time.minutes < 10) {
 		minutes = '0' + time.minutes.toString();
@@ -63,14 +70,18 @@ ConBoard.Head.prototype.update = function(time) {
 
 	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
 
+	if (this.startTick === time.startTick) {
+		console.log('Headline skipped');
+		return;
+	}
+	this.startTick = time.startTick;
+
+	var tock = new Date(time.startTick);
+
 	for (var i = 0; i < pieceCount; ++i) {
+		startMin = (tock.getMinutes() < 10)? '0' + tock.getMinutes().toString() : tock.getMinutes();
+		hour = tock.getHours();
 		this.updatePiece(i, hour, startMin);
-		if (startMin == '30') {
-			hour = (hour < 23)? (hour+1) : 0;
-			startMin = '00';
-		}
-		else {
-			startMin = 30;
-		}
+		tock.setTime(tock.getTime() + this.interval);
 	};
 };
