@@ -69,7 +69,7 @@ ConBoard.DeltaToString = function(delta) {
 	delta = (delta - sec) / 60;
 	var min = delta % 60;
 	var hrs = (delta - min) /60;
-	return ((hrs > 0)? (hrs + ':'): '' ) + ((min > 0)? (((min < 10)? ('0'+min) : min) + ':') : '') + ((sec < 10)? ('0'+sec) : sec);
+	return ((hrs > 0)? (hrs + ':'): '' ) + ((min > 0 || hrs > 0)? (((min < 10)? ('0'+min) : min) + ':') : '') + ((sec < 10)? ('0'+sec) : sec);
 };
 
 ConBoard.TickDiff = function(ts1, ts2) {
