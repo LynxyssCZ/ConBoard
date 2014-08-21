@@ -3,6 +3,8 @@ ConBoard.Body = function(config, notices) {
 	this.config = config;
 	this.notices = notices;
 
+	this.masked = 0;
+
 	this.cats = [];
 
 	this.createEl();
@@ -17,7 +19,6 @@ ConBoard.Body.prototype.update = function(time) {
 		for (var i = 0; i < this.notices.length; i++) {
 			var notice = this.notices[i];
 			if(notice.start < time.tick && notice.end > time.tick) {
-				console.log('STOP, notice time');
 				if (notice.rendered) {
 					notice.update();
 				}
@@ -25,9 +26,11 @@ ConBoard.Body.prototype.update = function(time) {
 					notice.create();
 					this.el.appendChild(notice.getEl());
 				}
+				this.masked++;
 			}
 			else if(notice.end < time.tick && notice.rendered) {
 				notice.destroy();
+				this.masked--;
 			}
 		}
 	}

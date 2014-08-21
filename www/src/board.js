@@ -51,10 +51,6 @@ ConBoard.Board.prototype.createBody = function() {
 	this.container.appendChild(this.body.getEl());
 };
 
-ConBoard.Board.prototype.updateHead = function(time) {
-	this.head.update(time);
-}
-
 ConBoard.Board.prototype.tick = function(event) {
 	event.startTick = event.tick - (event.tick % this.interval);
 	event.endTick = event.startTick + (this.resolution * this.interval);
@@ -65,6 +61,13 @@ ConBoard.Board.prototype.tick = function(event) {
 	this.head.update(event);
 
 	this.body.update(event);
+
+	if(this.body.masked > 0) {
+		this.head.hideLine();
+	}
+	else if (this.head.hidenLine && this.body.masked === 0) {
+		this.head.showLine();
+	}
 };
 
 ConBoard.Board.prototype.startTimer = function() {

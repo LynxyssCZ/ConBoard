@@ -113,10 +113,6 @@ ConBoard.Board.prototype.createBody = function() {
 	this.container.appendChild(this.body.getEl());
 };
 
-ConBoard.Board.prototype.updateHead = function(time) {
-	this.head.update(time);
-}
-
 ConBoard.Board.prototype.tick = function(event) {
 	event.startTick = event.tick - (event.tick % this.interval);
 	event.endTick = event.startTick + (this.resolution * this.interval);
@@ -127,6 +123,13 @@ ConBoard.Board.prototype.tick = function(event) {
 	this.head.update(event);
 
 	this.body.update(event);
+
+	if(this.body.masked > 0) {
+		this.head.hideLine();
+	}
+	else if (this.head.hidenLine && this.body.masked === 0) {
+		this.head.showLine();
+	}
 };
 
 ConBoard.Board.prototype.startTimer = function() {
@@ -162,6 +165,8 @@ ConBoard.Body = function(config, notices) {
 	this.config = config;
 	this.notices = notices;
 
+	this.masked = 0;
+
 	this.cats = [];
 
 	this.createEl();
@@ -176,7 +181,6 @@ ConBoard.Body.prototype.update = function(time) {
 		for (var i = 0; i < this.notices.length; i++) {
 			var notice = this.notices[i];
 			if(notice.start < time.tick && notice.end > time.tick) {
-				console.log('STOP, notice time');
 				if (notice.rendered) {
 					notice.update();
 				}
@@ -184,9 +188,11 @@ ConBoard.Body.prototype.update = function(time) {
 					notice.create();
 					this.el.appendChild(notice.getEl());
 				}
+				this.masked++;
 			}
 			else if(notice.end < time.tick && notice.rendered) {
 				notice.destroy();
+				this.masked--;
 			}
 		}
 	}
@@ -399,6 +405,17 @@ ConBoard.Head = function(config) {
 		this.pieces.push(piece);
 		this.lineEl.appendChild(piece);
 	};
+	this.hiddendLine = false;
+};
+
+ConBoard.Head.prototype.hideLine = function() {
+	this.lineEl.style.visibility = 'hidden';
+	this.hiddenLine = true;
+};
+
+ConBoard.Head.prototype.showLine = function() {
+	this.lineEl.style.visibility = 'visible';
+	this.hiddenLine = false;
 };
 
 ConBoard.Head.prototype.getEl = function() {

@@ -11,6 +11,17 @@ ConBoard.Head = function(config) {
 		this.pieces.push(piece);
 		this.lineEl.appendChild(piece);
 	};
+	this.hiddendLine = false;
+};
+
+ConBoard.Head.prototype.hideLine = function() {
+	this.lineEl.style.visibility = 'hidden';
+	this.hiddenLine = true;
+};
+
+ConBoard.Head.prototype.showLine = function() {
+	this.lineEl.style.visibility = 'visible';
+	this.hiddenLine = false;
 };
 
 ConBoard.Head.prototype.getEl = function() {
