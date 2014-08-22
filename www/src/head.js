@@ -57,7 +57,7 @@ ConBoard.Head.prototype.createPiece = function(interval) {
 };
 
 ConBoard.Head.prototype.updatePiece = function(i, hh, mm) {
-	this.pieces[i].innerHTML = hh + ':' + mm;
+	this.pieces[i].innerHTML = '<h2>' + hh + ':' + mm + '</h2>';
 };
 
 ConBoard.Head.prototype.update = function(time) {
@@ -78,7 +78,7 @@ ConBoard.Head.prototype.update = function(time) {
 		minutes = time.minutes;
 	}
 
-	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
+	this.timeEl.innerHTML = '<h2>'+ConBoard.DayEnum[time.day] + '</br>' + hour + ':' + minutes+'</h2>';
 
 	if (this.startTick === time.startTick) {
 		return;

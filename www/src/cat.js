@@ -132,7 +132,7 @@ ConBoard.Cat.prototype.createEl = function() {
 
 	var catHead = document.createElement('div');
 	catHead.setAttribute('class', 'con-board-cat-head');
-	catHead.innerHTML = this.name;
+	catHead.innerHTML = '<h2>'+this.name+'</h2>';
 	this.head = catHead;
 
 	var catBody = document.createElement('div');

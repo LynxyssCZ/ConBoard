@@ -369,7 +369,7 @@ ConBoard.Cat.prototype.createEl = function() {
 
 	var catHead = document.createElement('div');
 	catHead.setAttribute('class', 'con-board-cat-head');
-	catHead.innerHTML = this.name;
+	catHead.innerHTML = '<h2>'+this.name+'</h2>';
 	this.head = catHead;
 
 	var catBody = document.createElement('div');
@@ -394,6 +394,7 @@ ConBoard.Cat.prototype.createMarker = function() {
 	markEl.setAttribute('class', 'con-board-cat-body-marker');
 	return markEl;
 };
+
 window.ConBoard = window.ConBoard || {};
 ConBoard.Head = function(config) {
 	this.resolution = config.resolution;
@@ -453,7 +454,7 @@ ConBoard.Head.prototype.createPiece = function(interval) {
 };
 
 ConBoard.Head.prototype.updatePiece = function(i, hh, mm) {
-	this.pieces[i].innerHTML = hh + ':' + mm;
+	this.pieces[i].innerHTML = '<h2>' + hh + ':' + mm + '</h2>';
 };
 
 ConBoard.Head.prototype.update = function(time) {
@@ -474,7 +475,7 @@ ConBoard.Head.prototype.update = function(time) {
 		minutes = time.minutes;
 	}
 
-	this.timeEl.innerHTML = ConBoard.DayEnum[time.day] + ' ' + hour + ':' + minutes;
+	this.timeEl.innerHTML = '<h2>'+ConBoard.DayEnum[time.day] + '</br>' + hour + ':' + minutes+'</h2>';
 
 	if (this.startTick === time.startTick) {
 		return;
@@ -538,7 +539,7 @@ ConBoard.Programme.prototype.createEl = function() {
 };
 
 ConBoard.Programme.prototype.updateBody = function() {
-	this.detail.innerHTML = '<span class="con-board-programme-detail-title">' + this.title + '</span><span class="con-board-programme-detail-author">' + this.author + "</span>";
+	this.detail.innerHTML = '<h2 class="con-board-programme-detail-title">' + this.title + '</h2><h3 class="con-board-programme-detail-author">' + this.author + "</h3>";
 	this.detail.setAttribute('class', this.detail.getAttribute('class') + ' type-'+this.type);
 };
 
@@ -616,6 +617,7 @@ ConBoard.Timer.prototype.off = function(fn, scope) {
 ConBoard.Timer.prototype.Stop = function() {
 	window.clearInterval(this.interval);
 };
+
 window.ConBoard = window.ConBoard || {};
 ConBoard.Notice = function(config) {
 	this.el;

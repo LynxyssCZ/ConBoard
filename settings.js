@@ -11,5 +11,3 @@ exports.recordIndex = 'pid';
 exports.recordCatField = 'location';
 // Minimal local time. If local time is lower, the application wont launch server and print an error in the console
 exports.minTime = 1262304000000;
-// Ignored cats not returned by /categories api request
-exports.ignoredCats = ["DDR místnost", "Konzolová místnost", "Deskovkárna", "Malá tělocvična"];

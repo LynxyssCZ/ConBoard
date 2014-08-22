@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"padd",
+				"padding-bottom"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"tex",
+				"text-align"
+			],
+			[
+				"margin",
+				"margin-bottom"
+			],
+			[
+				"pad",
+				"padding"
+			],
+			[
+				"in",
+				"inline-block"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"item",
+				"itemIndex  (variable)"
+			],
+			[
+				"index",
+				"indexStore"
+			],
+			[
 				"param",
 				"params"
 			],
@@ -38,10 +78,6 @@
 			[
 				"get",
 				"getCategoryList"
-			],
-			[
-				"item",
-				"itemCatrgory"
 			],
 			[
 				"Prin",
@@ -478,84 +514,40 @@
 			[
 				"le",
 				"length"
-			],
-			[
-				"chil",
-				"children"
-			],
-			[
-				"_onCa",
-				"_onClipboardCancel"
-			],
-			[
-				"_onA",
-				"_onClipboardAdd"
-			],
-			[
-				"hi",
-				"hide"
-			],
-			[
-				"u",
-				"_updateVisibility"
-			],
-			[
-				"cm",
-				"componentLayout"
-			],
-			[
-				"_upda",
-				"_updateState"
-			],
-			[
-				"on",
-				"onPaste"
-			],
-			[
-				"un",
-				"_unbindClipboard"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "data/www/board.js",
+			"settings":
+			{
+				"buffer_size": 687,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "build.js",
+			"settings":
+			{
+				"buffer_size": 449,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "settings.js",
 			"settings":
 			{
-				"buffer_size": 389,
+				"buffer_size": 504,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "main.js",
+			"file": "www/src/head.js",
 			"settings":
 			{
-				"buffer_size": 1379,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "board/parser.js",
-			"settings":
-			{
-				"buffer_size": 1055,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "board/server.js",
-			"settings":
-			{
-				"buffer_size": 1841,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "board/collection.js",
-			"settings":
-			{
-				"buffer_size": 969,
+				"buffer_size": 2385,
 				"line_ending": "Unix"
 			}
 		}
@@ -563,7 +555,7 @@
 	"build_system": "Packages/User/sio.sublime-build",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 348.0,
 		"selected_items":
 		[
 			[
@@ -583,7 +575,7 @@
 				"Set Syntax: CSS"
 			]
 		],
-		"width": 476.0
+		"width": 602.0
 	},
 	"console":
 	{
@@ -604,6 +596,29 @@
 	},
 	"file_history":
 	[
+		"/home/lynxyss/Git/ConBoard/data/www/board.css",
+		"/home/lynxyss/Git/ConBoard/www/src/board.js",
+		"/home/lynxyss/Git/ConBoard/www/src/body.js",
+		"/home/lynxyss/Git/ConBoard/main.js",
+		"/home/lynxyss/Git/ConBoard/board/board.js",
+		"/home/lynxyss/Git/ConBoard/board/collection.js",
+		"/home/lynxyss/Git/ConBoard/www/index.html",
+		"/home/lynxyss/Git/ConBoard/board/server.js",
+		"/home/lynxyss/Git/ConBoard/node_modules/xml2js/node_modules/xmlbuilder/node_modules/lodash-node/compat/internals/isNative.js",
+		"/home/lynxyss/Git/ConBoard/node_modules/xml2js/node_modules/sax/test/stray-ending.js",
+		"/home/lynxyss/Git/ConBoard/settings.js",
+		"/home/lynxyss/Git/ConBoard/www/src/programme.js",
+		"/home/lynxyss/Git/ConBoard/www/src/cat.js",
+		"/home/lynxyss/Git/ConBoard/www/src/head.js",
+		"/home/lynxyss/Git/ConBoard/www/board.scss",
+		"/home/lynxyss/Git/ConBoard/www/board.css",
+		"/home/lynxyss/Git/ConBoard/www/board.js",
+		"/home/lynxyss/Git/ConBoard/www/src/request.js",
+		"/home/lynxyss/Git/ConBoard/www/src/timer.js",
+		"/home/lynxyss/Git/ConBoard/www/c180814.js",
+		"/home/lynxyss/Git/ConBoard/www/compile.sh",
+		"/home/lynxyss/Git/ConBoard/board/router.js",
+		"/home/lynxyss/Git/ConBoard/board/parser.js",
 		"/home/jbarot/priv_git/ConBoard/node_modules/express/lib/application.js",
 		"/home/jbarot/priv_git/ConBoard/node_modules/xml2js/node_modules/xmlbuilder/node_modules/lodash-node/compat/internals/arrayPool.js",
 		"/home/jbarot/priv_git/ConBoard/board/printer.js",
@@ -708,30 +723,7 @@
 		"/home/jbarot/work/git/samepage-web/app/client/content/page/InsertPanel.js",
 		"/home/jbarot/work/git/samepage-web/app/shared/ErrorCode.js",
 		"/home/jbarot/work/git/samepage-web/app/client/content/page/PageMode.js",
-		"/home/jbarot/work/git/samepage-web/app/iOS2/Samepage/jsobjects/Confirm.m",
-		"/home/jbarot/work/git/samepage-web/app/client/components/files/FilesModel.js",
-		"/home/jbarot/work/git/samepage-web/app/billing/Functions.js",
-		"/home/jbarot/work/git/samepage-web/app/client/clipboard/ClipboardController.js",
-		"/home/jbarot/work/git/samepage-web/modules/clipboard/test/jsu/ClipboardUtils.js",
-		"/home/jbarot/work/git/samepage-web/modules/coe/test/CoeApp.js",
-		"/home/jbarot/work/git/samepage-web/modules/coe/test/jsu/TextController.js",
-		"/home/jbarot/work/git/samepage-web/app/android/src/com/kerio/samepage/MainWebViewClient.java",
-		"/home/jbarot/work/git/samepage-web/app/iOS-hybrid/src/SamepageConnection.h",
-		"/home/jbarot/work/git/samepage-web/app/coel/src/Samepage.js",
-		"/home/jbarot/work/git/samepage-web/app/shared/api/StatsApi.js",
-		"/home/jbarot/work/git/samepage-web/app/shared/Settings.js",
-		"/home/jbarot/work/git/samepage-web/proxy/err503.js",
-		"/home/jbarot/work/git/samepage-web/proxy/modules/printInterfaces.js",
-		"/home/jbarot/work/git/samepage-web/modules/gui/src/IListViewStore.js",
-		"/home/jbarot/Desktop/diff",
-		"/home/jbarot/Desktop/merge-1.log",
-		"/home/jbarot/work/git/samepage-web/app/mobile2/src/app.json",
-		"/home/jbarot/work/git/samepage-web/app/mobile/page/Column.js",
-		"/home/jbarot/work/git/samepage-web/app/client/content/users/UserListModel.js",
-		"/home/jbarot/work/git/samepage-web/lib/tools/jslint/jslint.js",
-		"/home/jbarot/work/git/samepage-web/lib/tools/jslint/jslinter.js",
-		"/home/jbarot/work/git/samepage-web/app/client/sharing/MembersPanel.js",
-		"/home/jbarot/work/git/samepage-web/app/shared/ComponentManager.js"
+		"/home/jbarot/work/git/samepage-web/app/iOS2/Samepage/jsobjects/Confirm.m"
 	],
 	"find":
 	{
@@ -795,6 +787,76 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"getCats",
+			"settings",
+			"sourceData",
+			"setupData",
+			"storeData",
+			"setWindowHeight",
+			"reload",
+			"hiddendLine",
+			"hiddenLine",
+			"hidenLine",
+			"bottom",
+			"timeEl",
+			"Board",
+			".Head =",
+			".Head",
+			".head",
+			"logoEl",
+			"head",
+			"pieceNum",
+			"startInterval",
+			"startMinutes",
+			"wwwPath",
+			"staticPath",
+			"settings",
+			"sourcePath",
+			"sourceName",
+			"getList",
+			"getCategoryList",
+			"getCats",
+			"getCategoryList",
+			"getCats",
+			"getCategoryList",
+			"recordCatField",
+			"store",
+			"true",
+			"recordFields",
+			"mapFields",
+			"keyMap",
+			"catMap",
+			"recordFields",
+			"key",
+			"recordFields",
+			"mapFields",
+			"index",
+			"recordFields",
+			"itemIndex",
+			"true",
+			"indexStore",
+			"store",
+			"true",
+			"itemIndex",
+			"cmp",
+			"pid",
+			"recordIndex",
+			"exports",
+			"itemIndex",
+			"segmentation",
+			"recordIndex",
+			"itemIndex",
+			"indexStore",
+			"itemIndex",
+			"record",
+			"itemCategory",
+			"index",
+			"recordIndex",
+			"index",
+			"catMap",
+			"store",
+			"programmes",
+			"config",
 			"pid",
 			"get",
 			"getById",
@@ -852,77 +914,7 @@
 			"pasteMenuItem",
 			"pastebutton",
 			"paste",
-			"pastebutton",
-			"componentChain",
-			"_getItemChainFn",
-			"clipboard",
-			"animate",
-			"breadcrumb",
-			"chain",
-			"breadcrumb",
-			"breadCrumb",
-			"breadcrumb",
-			"BreadCrumb",
-			"breadCrumb",
-			"itemchain",
-			"itemmove",
-			"listPasteEnabled",
-			"listclipboardenabled",
-			"clipboard",
-			"true",
-			"_update",
-			"item",
-			"tenantId",
-			"item",
-			"pasteItem",
-			"'update'",
-			"tenantId",
-			"Ext",
-			"ext.template",
-			"'clipboard'",
-			"_registerClipboard",
-			"clipboardSettings",
-			"clipboardInstance",
-			"clipboardSettings",
-			"clipboardInstance",
-			";\n",
-			"clipboardInstance",
-			"event",
-			"filterFn",
-			"canPasteItemFn",
-			"filterFn",
-			"canPasteItemFn",
-			"jsu.log",
-			"onclipboardPa",
-			"data",
-			"\\r",
-			"true",
-			"ParseEnd",
-			"true",
-			"			\n",
-			"true",
-			"res",
-			"value",
-			"onstoragecommit",
-			"_onListPasteOut",
-			"JSU.log",
-			"\n							",
-			"JSU.log",
-			"_onListcutCancel",
-			"_onListPasteOut",
-			"_onListcutCancel",
-			".cancel",
-			"_clearStorage",
-			"onPageMoveHome",
-			"cutMaskFactoryFn: this.clipboard.getcutmask",
-			"this.breadCrumb",
-			"_onPageMoveToHome",
-			"onPageMoveHome",
-			"movepage",
-			"getcutMask",
-			"cutMaskFactoryFn",
-			"clipboard",
-			"this.clipboard"
+			"pastebutton"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -943,52 +935,157 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "settings.js",
+					"file": "data/www/board.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 389,
+						"buffer_size": 687,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								207,
-								207
+								174,
+								174
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "main.js",
+					"file": "build.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1379,
+						"buffer_size": 449,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								530,
-								530
+								295,
+								295
 							]
 						],
 						"settings":
@@ -996,7 +1093,7 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -1005,25 +1102,128 @@
 				},
 				{
 					"buffer": 2,
-					"file": "board/parser.js",
+					"file": "settings.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1055,
+						"buffer_size": 504,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								219,
-								219
+								504,
+								504
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1034,51 +1234,127 @@
 				},
 				{
 					"buffer": 3,
-					"file": "board/server.js",
+					"file": "www/src/head.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1841,
+						"buffer_size": 2385,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1071,
-								1071
+								370,
+								370
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "board/collection.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 969,
-						"regions":
-						{
-						},
-						"selection":
-						[
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
 							[
-								475,
-								475
-							]
-						],
-						"settings":
-						{
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
@@ -1142,6 +1418,14 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"inde",
+				"www/index.html"
+			],
+			[
+				"server",
+				"board/server.js"
+			],
 			[
 				"appli",
 				"node_modules/express/lib/application.js"
@@ -1645,14 +1929,6 @@
 			[
 				"menuit",
 				"modules/gui/src/MenuItem.js"
-			],
-			[
-				"clipbardma",
-				"modules/clipboard/src/ClipboardMaskView.js"
-			],
-			[
-				"maskvie",
-				"modules/clipboard/src/ClipboardMaskView.js"
 			]
 		],
 		"width": 0.0

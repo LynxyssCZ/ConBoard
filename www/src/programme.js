@@ -45,7 +45,7 @@ ConBoard.Programme.prototype.createEl = function() {
 };
 
 ConBoard.Programme.prototype.updateBody = function() {
-	this.detail.innerHTML = '<span class="con-board-programme-detail-title">' + this.title + '</span><span class="con-board-programme-detail-author">' + this.author + "</span>";
+	this.detail.innerHTML = '<h2 class="con-board-programme-detail-title">' + this.title + '</h2><h3 class="con-board-programme-detail-author">' + this.author + "</h3>";
 	this.detail.setAttribute('class', this.detail.getAttribute('class') + ' type-'+this.type);
 };
 

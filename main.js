@@ -15,7 +15,6 @@ printer.PrintOk('Setting up data');
 
 if (Date.now() < settings.minTime) {
 	printer.PrintError('Server time too low!');
-	gracefulExit();
 }
 
 setupData(settings.dataPath + '/' + settings.sourceName, storeData);
@@ -35,8 +34,7 @@ function storeData(err, data) {
 			{
 				recordIndex: settings.recordIndex,
 				recordFields: settings.recordFields,
-				recordCatField: settings.recordCatField,
-				ignoredCats: settings.ignoredCats
+				recordCatField: settings.recordCatField
 			},
 			data
 		);
