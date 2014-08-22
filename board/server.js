@@ -2,7 +2,7 @@ var http = require('http');
 var express = require('express');
 
 var printer = require('./printer');
-
+shelljs = require('shelljs/global');
 var nodeApp = express();
 var settings = null;
 var collection;
@@ -11,6 +11,7 @@ var api = [];
 function Start() {
 	nodeApp.listen(settings.port);
 	printer.PrintOk('Server started on port: ' + settings.port);
+	exec('midori -e Reload');
 }
 
 function Stop() {
