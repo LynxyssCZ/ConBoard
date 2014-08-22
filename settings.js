@@ -1,7 +1,7 @@
 exports.port = 8085;
-exports.wwwPath = './www';
+exports.wwwPath = __dirname+'/www';
 // Data path settings
-exports.dataPath = './data';
+exports.dataPath = __dirname+'/data';
 exports.sourceName = 'source.xml';
 // Fields that make up short records
 exports.recordFields = ['pid', 'startTime', 'endTime'];
