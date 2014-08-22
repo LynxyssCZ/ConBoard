@@ -11,7 +11,7 @@ var api = [];
 function Start() {
 	nodeApp.listen(settings.port);
 	printer.PrintOk('Server started on port: ' + settings.port);
-	exec('midori -e Reload');
+	exec('midori -e Fullscreen 127.0.0.1:' + settings.port + ' -e Reload');
 }
 
 function Stop() {
