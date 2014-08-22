@@ -19,6 +19,7 @@ ConBoard.Board = function(boardDiv, config) {
 	this.interval = config.interval;
 	this.timeDelay = config.timeDelay;
 	this.notices = config.notices;
+	this.catMapper = config.catMapper;
 
 	this.minutes;
 
@@ -43,7 +44,7 @@ ConBoard.Board.prototype.createHead = function() {
 ConBoard.Board.prototype.createBody = function() {
 	this.body = new ConBoard.Body({
 		catKey: this.catKey,
-		timeDelay: this.timeDelay,
+		timeDelay: this.timeDelay
 		},
 		this.notices
 	);
@@ -87,6 +88,7 @@ ConBoard.Board.prototype.getCats = function() {
 };
 
 ConBoard.Board.prototype.loadCats = function(cats) {
+	cats = this.catMapper(cats);
 	for (var cat in cats) {
 		this.body.createCat({
 			name: cats[cat],
